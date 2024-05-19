@@ -43,7 +43,7 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 
 func logMessages(messages chan *protos.GossipMessage, local log.Logger) {
 	for msg := range messages {
-		local.Info("Received message! |", "msg", msg)
+		local.Info("RECEIVED |", "msg", msg)
 	}
 }
 
@@ -65,7 +65,7 @@ func main() {
 
 	dns_resolver, err := madns.NewResolver()
 	if err != nil {
-		log.Fatal("Could not start the DNS resolver", "Error", err)
+		log.Fatal("Could not start the DNS resolver |", "Error", err)
 	}
 	log.Info("Successfully started the DNS resolver!")
 
@@ -80,7 +80,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 	
-	log.Info("Started the libp2p host!", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
+	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
 	init_peer, err := multiaddr.NewMultiaddr(os.Getenv("INIT_PEER"))
 	if err != nil {

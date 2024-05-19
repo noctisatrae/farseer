@@ -42,7 +42,7 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 		},
 	}
 
-	netw.logger.Info("Sending contact info", "Message", &m)
+	netw.logger.Info("SENDING", "Message", &m)
 
 	if err := netw.Publish(&m); err != nil {
     log.Error("Error publishing message! |", "Error", err)
