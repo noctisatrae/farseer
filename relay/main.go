@@ -2,14 +2,12 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"net"
 	"os"
 	"os/signal"
 	"strconv"
-	"strings"
 	"syscall"
+	"time"
 
 	protos "farseer/protos"
 
@@ -29,34 +27,10 @@ import (
 	// "github.com/libp2p/go-libp2p/core/host"
 	// "github.com/libp2p/go-libp2p/core/peer"
 
-	// make the peer available on the internet! => requires money
-	"golang.ngrok.com/ngrok"
-	"golang.ngrok.com/ngrok/config"
-
 	// INITIAL secret var
 	"github.com/joho/godotenv"
 )
 
-func GetNgrokMultiaddr(listener net.Listener) (string, error) {
-	if listener != nil {
-		addrPort := strings.Split(listener.Addr().String(), ":")
-		if len(addrPort) != 2 {
-			return "", errors.New("bad addr format")
-		}
-	
-		return fmt.Sprintf("/dns/%s/tcp/%s", addrPort[0], addrPort[1]), nil
-	} else {
-		return "", errors.New("NGROK_AUTHTOKEN is empty")
-	}
-}
-
-func NgrokListener(ctx context.Context) (net.Listener, error) {
-	return ngrok.Listen(
-		ctx,
-		config.TCPEndpoint(),
-		ngrok.WithAuthtokenFromEnv(),
-	)
-}
 
 func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	connected := h.Network().Connectedness(peerID)
@@ -81,6 +55,9 @@ func main() {
 
 	ctx := context.Background()
 
+	ticker := time.NewTicker(3 * time.Second)
+	defer ticker.Stop()
+
 	gossipsubPort, err := strconv.Atoi(os.Getenv("GOSSIPSUB_PORT"))
 	if err != nil {
 		log.Fatal("Can't parse default gossipsub port, QUITING! |", "Error", err)
@@ -91,24 +68,6 @@ func main() {
 		log.Fatal("Could not start the DNS resolver", "Error", err)
 	}
 	log.Info("Successfully started the DNS resolver!")
-
-	var listener net.Listener
-	if os.Getenv("NGROK_AUTHTOKEN") != "" {
-		_listener, err := NgrokListener(ctx)
-		listener = _listener
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-	}
-
-	if listener != nil {
-		log.Info("Started ngrok to make the peer publicly available |", "Addr", listener.Addr())
-	}
-
-	ngrokMultiaddrString, err := GetNgrokMultiaddr(listener)
-	if err != nil {
-		log.Error("Couldn't create a multiaddr from ngrok listener |", "Error", err)
-	}
 
 	h, err := libp2p.New(		
 		libp2p.Ping(true),
@@ -121,7 +80,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 	
-	log.Info("Started the libp2p host!", "Addrs", h.Addrs(), "PublicAddr", fmt.Sprintf("%s/p2p/%s", ngrokMultiaddrString, h.ID().String()))
+	log.Info("Started the libp2p host!", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
 	init_peer, err := multiaddr.NewMultiaddr(os.Getenv("INIT_PEER"))
 	if err != nil {
@@ -169,14 +128,18 @@ func main() {
 	go logMessages(netw_contact.NetworkMessage, netw_contact.logger)
 	go logMessages(netw_discovery.NetworkMessage, netw_discovery.logger)
 
-	netw_contact.PublishContactInfo(&protos.ContactInfoContent{
-		HubVersion: "2023.12.27",
-		Network: 2,
-		GossipAddress: &protos.GossipAddressInfo{
-			Address: h.Addrs()[0].String(),
-			Port: uint32(gossipsubPort),
-		},
-	})
+	go func() {
+		for range ticker.C {
+			netw_contact.PublishContactInfo(&protos.ContactInfoContent{
+				HubVersion: "2023",
+				Network: 2,
+				GossipAddress: &protos.GossipAddressInfo{
+					Address: h.Addrs()[0].String(),
+					Port: uint32(gossipsubPort),
+				},
+			})
+		}
+	}()
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)

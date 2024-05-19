@@ -5,16 +5,8 @@ go 1.22.3
 require github.com/charmbracelet/log v0.4.0
 
 require (
-	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.5 // indirect
-	github.com/inconshreveable/log15 v3.0.0-testing.3+incompatible // indirect
-	github.com/inconshreveable/log15/v3 v3.0.0-testing.5 // indirect
-	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/libp2p/go-mplex v0.7.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	golang.ngrok.com/muxado/v2 v2.0.0 // indirect
-	golang.org/x/term v0.17.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
@@ -98,7 +90,6 @@ require (
 	go.uber.org/mock v0.4.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.ngrok.com/ngrok v1.9.1
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/mod v0.15.0 // indirect
