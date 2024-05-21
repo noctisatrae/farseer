@@ -131,7 +131,7 @@ func main() {
 	go func() {
 		for range ticker.C {
 			netw_contact.PublishContactInfo(&protos.ContactInfoContent{
-				HubVersion: "2023",
+				HubVersion: "2024.5.1",
 				Network: 2,
 				GossipAddress: &protos.GossipAddressInfo{
 					Address: h.Addrs()[0].String(),
