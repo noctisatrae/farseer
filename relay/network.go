@@ -50,12 +50,12 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 }
 
 func (netw *Network) Publish(m *protos.GossipMessage) error {
-	m_encoded, err := proto.Marshal(m)
+	mEncoded, err := proto.Marshal(m)
 	if err != nil {
 		netw.logger.Error("Couldn't encode the gossip message! |", "Error", err)
 	}
 
-	err = netw.topic.Publish(netw.ctx, m_encoded)
+	err = netw.topic.Publish(netw.ctx, mEncoded)
 	return err
 }
 
@@ -105,12 +105,12 @@ func (netw *Network) readLoop() {
 			continue
 		}
 		
-		netw_msg := new(protos.GossipMessage)
-		err = proto.Unmarshal(msg.Data, netw_msg)
+		netwMsg := new(protos.GossipMessage)
+		err = proto.Unmarshal(msg.Data, netwMsg)
 		if err != nil {
 			log.Error("Could not parse the incoming message! |", "error", err)
 			continue
 		}
-		netw.NetworkMessage <- netw_msg
+		netw.NetworkMessage <- netwMsg
 	}
 }
