@@ -16,13 +16,13 @@ import (
 type Network struct {
 	NetworkMessage chan *protos.GossipMessage
 
-	ctx context.Context
-	ps *pubsub.PubSub
+	ctx   context.Context
+	ps    *pubsub.PubSub
 	topic *pubsub.Topic
-	sub *pubsub.Subscription
+	sub   *pubsub.Subscription
 
 	logger log.Logger
-	self peer.ID
+	self   peer.ID
 }
 
 func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
@@ -33,9 +33,9 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 	}
 
 	m := protos.GossipMessage{
-		Topics: []string{netw.topic.String()},
-		PeerId: []byte(netw.self.String()),
-		Version: protos.GossipVersion_GOSSIP_VERSION_V1_1,
+		Topics:    []string{netw.topic.String()},
+		PeerId:    []byte(netw.self.String()),
+		Version:   protos.GossipVersion_GOSSIP_VERSION_V1_1,
 		Timestamp: timestamp,
 		Content: &protos.GossipMessage_ContactInfoContent{
 			ContactInfoContent: contact,
@@ -45,7 +45,7 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 	netw.logger.Info("SENDING", "Message", &m)
 
 	if err := netw.Publish(&m); err != nil {
-    log.Error("Error publishing message! |", "Error", err)
+		log.Error("Error publishing message! |", "Error", err)
 	}
 }
 
@@ -72,19 +72,19 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	
+
 	ll := log.NewWithOptions(os.Stderr, log.Options{
 		Prefix: topicReq,
 	})
 
 	netw := &Network{
-		ctx: ctx,
-		ps: ps,
-		topic: topic,
-		sub: sub,
+		ctx:            ctx,
+		ps:             ps,
+		topic:          topic,
+		sub:            sub,
 		NetworkMessage: make(chan *protos.GossipMessage, 128), // PUT bfr_length in .env file instead of 128
-		self: selfId,
-		logger: *ll,
+		self:           selfId,
+		logger:         *ll,
 	}
 
 	go netw.readLoop()
@@ -104,7 +104,7 @@ func (netw *Network) readLoop() {
 		if msg.ReceivedFrom == netw.self {
 			continue
 		}
-		
+
 		netwMsg := new(protos.GossipMessage)
 		err = proto.Unmarshal(msg.Data, netwMsg)
 		if err != nil {

@@ -31,7 +31,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	connected := h.Network().Connectedness(peerID)
 	if connected == network.Connected {
@@ -69,7 +68,7 @@ func main() {
 	}
 	log.Info("Successfully started the DNS resolver!")
 
-	h, err := libp2p.New(		
+	h, err := libp2p.New(
 		libp2p.Ping(true),
 		libp2p.ListenAddrStrings(
 			fmt.Sprintf("/ip4/0.0.0.0/tcp/%s", os.Getenv("GOSSIPSUB_PORT")),
@@ -79,7 +78,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	
+
 	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
 	initPeer, err := multiaddr.NewMultiaddr(os.Getenv("INIT_PEER"))
@@ -132,10 +131,10 @@ func main() {
 		for range ticker.C {
 			netwContact.PublishContactInfo(&protos.ContactInfoContent{
 				HubVersion: "2024.5.1",
-				Network: 2,
+				Network:    2,
 				GossipAddress: &protos.GossipAddressInfo{
 					Address: h.Addrs()[0].String(),
-					Port: uint32(gossipsubPort),
+					Port:    uint32(gossipsubPort),
 				},
 			})
 		}
