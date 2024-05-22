@@ -63,7 +63,7 @@ func main() {
 		log.Fatal("Can't parse default gossipsub port, QUITING! |", "Error", err)
 	}
 
-	dns_resolver, err := madns.NewResolver()
+	dnsResolver, err := madns.NewResolver()
 	if err != nil {
 		log.Fatal("Could not start the DNS resolver |", "Error", err)
 	}
@@ -82,55 +82,55 @@ func main() {
 	
 	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
-	init_peer, err := multiaddr.NewMultiaddr(os.Getenv("INIT_PEER"))
+	initPeer, err := multiaddr.NewMultiaddr(os.Getenv("INIT_PEER"))
 	if err != nil {
 		log.Fatal("Couldn't parse multiaddr!", "Error", err)
 	}
 
-	resolved_multiaddrs, err := dns_resolver.Resolve(ctx, init_peer)
+	resolvedMultiaddrs, err := dnsResolver.Resolve(ctx, initPeer)
 	if err != nil {
 		log.Fatal("Can't resolve from DNS addr", "Error", err)
 	}
-	peer_addrinfo, err := peer.AddrInfoFromP2pAddr(resolved_multiaddrs[0])
+	peerAddrinfo, err := peer.AddrInfoFromP2pAddr(resolvedMultiaddrs[0])
 	if err != nil {
 		log.Fatal("Can't convert multiaddr to addrinfo", "Error", err)
 	}
 
-	log.Info("Connecting to a remote peer! |", "peer", peer_addrinfo)
-	err = h.Connect(ctx, *peer_addrinfo)
+	log.Info("Connecting to a remote peer! |", "peer", peerAddrinfo)
+	err = h.Connect(ctx, *peerAddrinfo)
 	if err != nil {
 		log.Error("", "Error", err)
 	}
 
-	checkConnectionStatus(h, peer_addrinfo.ID)
+	checkConnectionStatus(h, peerAddrinfo.ID)
 
 	ps, err := pubsub.NewGossipSub(ctx, h)
 	if err != nil {
 		log.Error(err)
 	}
 
-	netw_primary, err := ReceiveMessages(ctx, ps, h.ID(), "primary")
+	netwPrimary, err := ReceiveMessages(ctx, ps, h.ID(), "primary")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	netw_contact, err := ReceiveMessages(ctx, ps, h.ID(), "contact_info")
+	netwContact, err := ReceiveMessages(ctx, ps, h.ID(), "contact_info")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	netw_discovery, err := ReceiveMessages(ctx, ps, h.ID(), "peer_discovery")
+	netwDiscovery, err := ReceiveMessages(ctx, ps, h.ID(), "peer_discovery")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	go logMessages(netw_primary.NetworkMessage, netw_primary.logger)
-	go logMessages(netw_contact.NetworkMessage, netw_contact.logger)
-	go logMessages(netw_discovery.NetworkMessage, netw_discovery.logger)
+	go logMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
+	go logMessages(netwContact.NetworkMessage, netwContact.logger)
+	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	go func() {
 		for range ticker.C {
-			netw_contact.PublishContactInfo(&protos.ContactInfoContent{
+			netwContact.PublishContactInfo(&protos.ContactInfoContent{
 				HubVersion: "2024.5.1",
 				Network: 2,
 				GossipAddress: &protos.GossipAddressInfo{
