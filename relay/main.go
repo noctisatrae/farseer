@@ -133,7 +133,7 @@ func main() {
 				HubVersion: "2024.5.1",
 				Network:    2,
 				GossipAddress: &protos.GossipAddressInfo{
-					Address: h.Addrs()[0].String(),
+					Address: "92.158.95.48",
 					Port:    uint32(gossipsubPort),
 				},
 			})
