@@ -127,18 +127,14 @@ func main() {
 	go logMessages(netwContact.NetworkMessage, netwContact.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
-	go func() {
-		for range ticker.C {
-			netwContact.PublishContactInfo(&protos.ContactInfoContent{
-				HubVersion: "2024.5.1",
-				Network:    2,
-				GossipAddress: &protos.GossipAddressInfo{
-					Address: "92.158.95.48",
-					Port:    uint32(gossipsubPort),
-				},
-			})
-		}
-	}()
+	netwContact.PublishContactInfo(&protos.ContactInfoContent{
+		HubVersion: "2024.5.1",
+		Network:    2,
+		GossipAddress: &protos.GossipAddressInfo{
+			Address: "92.158.95.48",
+			Port:    uint32(gossipsubPort),
+		},
+	})
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
