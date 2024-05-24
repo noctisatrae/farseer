@@ -136,6 +136,12 @@ func main() {
 		},
 	})
 
+	h.Network().Notify(&network.NotifyBundle{
+		ConnectedF: func(n network.Network, c network.Conn) {
+			log.Info("Peer connected!", "Id", c.RemotePeer(), "Multiaddr", c.RemoteMultiaddr())
+		},
+	})
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	<-ch
