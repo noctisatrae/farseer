@@ -134,6 +134,16 @@ func main() {
 			Address: "92.158.95.48",
 			Port:    uint32(gossipsubPort),
 		},
+		Body: &protos.ContactInfoContentBody{
+			GossipAddress: &protos.GossipAddressInfo{
+				Address: "92.158.95.48",
+				Port: uint32(gossipsubPort),
+			},
+			HubVersion: "2024.5.1",
+			Network: 2,
+			Timestamp: uint64(time.Now().Unix()),
+			AppVersion: "1.0",
+		},
 		Timestamp: uint64(time.Now().Unix()),
 	})
 

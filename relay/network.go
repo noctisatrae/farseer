@@ -36,7 +36,7 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 	m := protos.GossipMessage{
 		Topics:    []string{netw.topic.String()},
 		PeerId:    peerIdEncoded,
-		Version:   protos.GossipVersion_GOSSIP_VERSION_V1,
+		Version:   protos.GossipVersion_GOSSIP_VERSION_V1_1,
 		Timestamp: uint32(time.Now().Unix()),
 		Content: &protos.GossipMessage_ContactInfoContent{
 			ContactInfoContent: contact,
