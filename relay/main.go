@@ -131,11 +131,13 @@ func main() {
 		HubVersion: "2024.5.1",
 		Network:    2,
 		GossipAddress: &protos.GossipAddressInfo{
+			Family: 4, // to know if address ip4/ip6?
 			Address: "92.158.95.48",
 			Port:    uint32(gossipsubPort),
 		},
 		Body: &protos.ContactInfoContentBody{
 			GossipAddress: &protos.GossipAddressInfo{
+				Family: 4,
 				Address: "92.158.95.48",
 				Port: uint32(gossipsubPort),
 			},
