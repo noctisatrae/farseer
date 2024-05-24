@@ -32,9 +32,15 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 		return
 	}
 
+	peerIdEncoded, err := netw.self.Marshal()
+	if err != nil {
+		log.Error("Will send empty peerId in contact info => impossible to marshal", "Error", err)
+		peerIdEncoded = []byte{}
+	}
+
 	m := protos.GossipMessage{
 		Topics:    []string{netw.topic.String()},
-		PeerId:    []byte(netw.self.String()),
+		PeerId:    peerIdEncoded,
 		Version:   protos.GossipVersion_GOSSIP_VERSION_V1,
 		Timestamp: timestamp,
 		Content: &protos.GossipMessage_ContactInfoContent{
