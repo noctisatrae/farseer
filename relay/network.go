@@ -5,6 +5,7 @@ import (
 	protos "farseer/protos"
 	"fmt"
 	"os"
+	"time"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"
@@ -26,12 +27,6 @@ type Network struct {
 }
 
 func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
-	timestamp, err := getFarcasterTime()
-	if err != nil {
-		log.Error("Couldn't get Farcaster time, did not send the message |", "Error", err)
-		return
-	}
-
 	peerIdEncoded, err := netw.self.Marshal()
 	if err != nil {
 		log.Error("Will send empty peerId in contact info => impossible to marshal", "Error", err)
@@ -42,7 +37,7 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 		Topics:    []string{netw.topic.String()},
 		PeerId:    peerIdEncoded,
 		Version:   protos.GossipVersion_GOSSIP_VERSION_V1,
-		Timestamp: timestamp,
+		Timestamp: uint32(time.Now().Unix()),
 		Content: &protos.GossipMessage_ContactInfoContent{
 			ContactInfoContent: contact,
 		},

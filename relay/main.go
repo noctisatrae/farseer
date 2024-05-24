@@ -134,6 +134,7 @@ func main() {
 			Address: "92.158.95.48",
 			Port:    uint32(gossipsubPort),
 		},
+		Timestamp: uint64(time.Now().Unix()),
 	})
 
 	h.Network().Notify(&network.NotifyBundle{
