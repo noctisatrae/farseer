@@ -25,9 +25,9 @@ func HandleContactInfo(contactInfoChan chan *protos.GossipMessage, ll log.Logger
 		ll.Info("Received contact info! |", "Addr", remotePeerAddr, "Port", remotePeerPort, "Family", remotePeerAddrFamily)
 
 		remotePeerMultiAddr, err := multiaddr.NewMultiaddr(fmt.Sprintf(
-			"/ip%s/%s/tcp/%s/p2p/12D3KooWEWyEQXVaeUb7rtBmXBW7i4TcwTyS8qwmSdvYTNvnZVnv", 
-			strconv.FormatUint(uint64(remotePeerAddrFamily), 10), 
-			remotePeerAddr, 
+			"/ip%s/%s/tcp/%s/p2p/12D3KooWEWyEQXVaeUb7rtBmXBW7i4TcwTyS8qwmSdvYTNvnZVnv",
+			strconv.FormatUint(uint64(remotePeerAddrFamily), 10),
+			remotePeerAddr,
 			strconv.FormatUint(uint64(remotePeerPort), 10),
 		))
 		if err != nil {
