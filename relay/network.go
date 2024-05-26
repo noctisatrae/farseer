@@ -16,7 +16,7 @@ import (
 )
 
 type Network struct {
-	NetworkMessage chan *protos.MessageBundle
+	NetworkMessage chan *protos.Message
 
 	ctx   context.Context
 	ps    *pubsub.PubSub
@@ -94,7 +94,7 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		ps:             ps,
 		topic:          topic,
 		sub:            sub,
-		NetworkMessage: make(chan *protos.MessageBundle, bfrLgth),
+		NetworkMessage: make(chan *protos.Message, bfrLgth),
 		self:           selfId,
 		logger:         *ll,
 	}
@@ -119,7 +119,7 @@ func (netw *Network) readLoop() {
 			netw.logger.Debug("Received a message! |", "Msg", msg)
 		}
 
-		netwMsg := new(protos.MessageBundle)
+		netwMsg := new(protos.Message)
 		err = proto.Unmarshal(msg.Data, netwMsg)
 		if err != nil {
 			log.Error("Could not parse the incoming message! |", "error", err)
