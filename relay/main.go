@@ -41,9 +41,22 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	}
 }
 
-func logMessages(messages chan *protos.GossipMessage, local log.Logger) {
+func handleMessages(messages chan *protos.GossipMessage, ll log.Logger) {
+	for msgB := range messages {
+		for _, m := range msgB.GetMessageBundle().GetMessages() {
+			switch m.Data.Type {
+			case protos.MessageType_MESSAGE_TYPE_CAST_ADD:
+				ll.Info(m.Data.GetCastAddBody())
+			default:
+				ll.Info("", "Body", m.Data.Body, "Fid", m.Data.Fid)
+			}
+		}
+	}
+}
+
+func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 	for msg := range messages {
-		local.Info("RECEIVED |", "msg", msg)
+		ll.Info("RECEIVED |", "msg", msg)
 	}
 }
 
@@ -133,12 +146,13 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	handler := Handler[any]{}
-	handler.CastAddHandler = func(data *protos.MessageData) (any, error) {
-		return data.Body, nil
-	}
+	// handler := Handler[any]{}
+	// handler.CastAddHandler = func(data *protos.MessageData) (any, error) {
+	// 	return data.Body, nil
+	// }
 
-	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
+	// go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
+	go handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	netwContact.PublishContactInfo(&protos.ContactInfoContent{
