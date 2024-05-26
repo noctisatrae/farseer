@@ -40,7 +40,7 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	}
 }
 
-func logMessages(messages chan *protos.GossipMessage, local log.Logger) {
+func logMessages(messages chan *protos.MessageBundle, local log.Logger) {
 	for msg := range messages {
 		local.Info("RECEIVED |", "msg", msg)
 	}
@@ -50,6 +50,11 @@ func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(err.Error())
+	}
+
+	if os.Getenv("CONTEXT") == "DEBUG" {
+		log.SetLevel(log.DebugLevel)
+		log.Debug("Debugging mode enabled! Have fun :D")
 	}
 
 	ctx := context.Background()
@@ -103,7 +108,13 @@ func main() {
 
 	checkConnectionStatus(h, peerAddrinfo.ID)
 
-	ps, err := pubsub.NewGossipSub(ctx, h)
+	psParams := pubsub.DefaultGossipSubParams()
+	psParams.Dlo = 1
+	log.Debug("GossipSub initial params! |", "Params", psParams)
+
+	params := pubsub.WithGossipSubParams(psParams)
+
+	ps, err := pubsub.NewGossipSub(ctx, h, params)
 	if err != nil {
 		log.Error(err)
 	}
@@ -127,23 +138,26 @@ func main() {
 	go logMessages(netwContact.NetworkMessage, netwContact.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
+	log.Info("Waiting 5s for the network to pick up our arrival!")
+	time.Sleep(5 * time.Second)
+
 	netwContact.PublishContactInfo(&protos.ContactInfoContent{
 		HubVersion: "2024.5.1",
 		Network:    2,
 		GossipAddress: &protos.GossipAddressInfo{
-			Family: 4, // to know if address ip4/ip6?
+			Family:  4, // to know if address ip4/ip6?
 			Address: "92.158.95.48",
 			Port:    uint32(gossipsubPort),
 		},
 		Body: &protos.ContactInfoContentBody{
 			GossipAddress: &protos.GossipAddressInfo{
-				Family: 4,
+				Family:  4,
 				Address: "92.158.95.48",
-				Port: uint32(gossipsubPort),
+				Port:    uint32(gossipsubPort),
 			},
 			HubVersion: "2024.5.1",
-			Network: 2,
-			Timestamp: uint64(time.Now().Unix()),
+			Network:    2,
+			Timestamp:  uint64(time.Now().Unix()),
 			AppVersion: "1.0",
 		},
 		Timestamp: uint64(time.Now().Unix()),

@@ -5,6 +5,7 @@ import (
 	protos "farseer/protos"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
@@ -15,7 +16,7 @@ import (
 )
 
 type Network struct {
-	NetworkMessage chan *protos.GossipMessage
+	NetworkMessage chan *protos.MessageBundle
 
 	ctx   context.Context
 	ps    *pubsub.PubSub
@@ -29,7 +30,7 @@ type Network struct {
 func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 	peerIdEncoded, err := netw.self.Marshal()
 	if err != nil {
-		log.Error("Will send empty peerId in contact info => impossible to marshal", "Error", err)
+		netw.logger.Error("An empty PeerId will be sent because we can't marshall the provided one. |", "Error", err)
 		peerIdEncoded = []byte{}
 	}
 
@@ -46,7 +47,7 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 	netw.logger.Info("SENDING", "Message", &m)
 
 	if err := netw.Publish(&m); err != nil {
-		log.Error("Error publishing message! |", "Error", err)
+		netw.logger.Error("Error publishing message! |", "Error", err)
 	}
 }
 
@@ -78,12 +79,22 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		Prefix: topicReq,
 	})
 
+	if os.Getenv("CONTEXT") == "DEBUG" {
+		ll.SetLevel(log.DebugLevel)
+	}
+
+	bfrLgth, err := strconv.Atoi(os.Getenv("BUFFER"))
+	if err != nil {
+		bfrLgth = 128
+		ll.Warn("Overriding provided buffer length! |", "Err", err, "Default", bfrLgth)
+	}
+
 	netw := &Network{
 		ctx:            ctx,
 		ps:             ps,
 		topic:          topic,
 		sub:            sub,
-		NetworkMessage: make(chan *protos.GossipMessage, 128), // PUT bfr_length in .env file instead of 128
+		NetworkMessage: make(chan *protos.MessageBundle, bfrLgth),
 		self:           selfId,
 		logger:         *ll,
 	}
@@ -104,9 +115,11 @@ func (netw *Network) readLoop() {
 		// if message received is from me => don't care
 		if msg.ReceivedFrom == netw.self {
 			continue
+		} else {
+			netw.logger.Debug("Received a message! |", "Msg", msg)
 		}
 
-		netwMsg := new(protos.GossipMessage)
+		netwMsg := new(protos.MessageBundle)
 		err = proto.Unmarshal(msg.Data, netwMsg)
 		if err != nil {
 			log.Error("Could not parse the incoming message! |", "error", err)
