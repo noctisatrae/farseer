@@ -77,6 +77,15 @@ func (handler Handler) handleMessages(messages chan *protos.GossipMessage, ll lo
 						ll.Error("LinkAdd handler encountered an error! |", "Error", err)
 					}
 				}
+			case protos.MessageType_MESSAGE_TYPE_LINK_REMOVE:
+				if handler.LinkRemoveHandler == nil {
+					ll.Info("A link was removed! |", "Link", data.GetLinkBody())
+				} else {
+					err := handler.LinkAddHandler(data)
+					if err != nil {
+						ll.Error("LinkRemove handler encountered an error! |", "Error", err)
+					}
+				}
 			default:
 				ll.Warn("Unhandled message type! |", "Type", data.Type)
 			}
