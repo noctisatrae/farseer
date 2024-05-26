@@ -1,0 +1,33 @@
+INFO contact_info: RECEIVED | &{
+  gossip_address:{address:"44.196.72.233"  family:4  port:2282}  
+  rpc_address:{
+    address:"44.196.72.233"  
+    family:4  
+    port:2283  
+    dns_name:"nemes.farcaster.xyz"
+  }  
+  count:369275179  
+  hub_version:"2024.5.1"  
+  network:FARCASTER_NETWORK_MAINNET  
+  app_version:"1.12.1"  
+  timestamp:1716731820685  
+  body:{
+    gossip_address:{
+      address:"44.196.72.233"  
+      family:4  
+      port:2282
+    }  
+    rpc_address:{
+      address:"44.196.72.233"  
+      family:4  
+      port:2283  
+      dns_name:"nemes.farcaster.xyz"
+    }  
+    count:369275179  
+    hub_version:"2024.5.1"  
+    network:FARCASTER_NETWORK_MAINNET  
+    app_version:"1.12.1"  
+    timestamp:1716731820685
+  }  
+  signature:"%\x1e\x9ab\xa0j[\xd1\xc2sE\x9a\xa9\x11p\x00\xf8\x9a\x04St\xde\x19\xb2\xa0D(\xf3\xb5=\x04\xd6\xe6;\xef\x05d\xf7N\x16ב\xa8\x13v^\xa2]\xa0\x1fO$\xd9\xf1\x0fM\xfc\xb7\x9e\xcf\x17\x9f2\n"  signer:"\xacF\x84(X\xb9\xa4z\xed\xb6\xeb(T\xd5r'\xe9y\xaa\xa9\xa5p\xa3)0\x91AC\xe7,B\x89"
+}
