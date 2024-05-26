@@ -62,7 +62,6 @@ func (handler Handler) handleMessages(messages chan *protos.GossipMessage, ll lo
 			case protos.MessageType_MESSAGE_TYPE_REACTION_REMOVE:
 				if handler.ReactionRemoveHandler == nil {
 					ll.Info("A reaction was removed! |", "Reaction", data.GetReactionBody())
-					return
 				} else {
 					err := handler.ReactionRemoveHandler(data)
 					if err != nil {
