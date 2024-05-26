@@ -6,13 +6,13 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-type HandlerBehaviour[T any] func (data *protos.MessageData) (T, error) 
+type HandlerBehaviour[T any] func(data *protos.MessageData) (T, error)
 
 type Handler[T any] struct {
-	CastAddHandler HandlerBehaviour[T]
-	CastRemoveHandler HandlerBehaviour[T]
-	FrameActionHandler HandlerBehaviour[T]
-	ReactionAddHandler HandlerBehaviour[T]
+	CastAddHandler        HandlerBehaviour[T]
+	CastRemoveHandler     HandlerBehaviour[T]
+	FrameActionHandler    HandlerBehaviour[T]
+	ReactionAddHandler    HandlerBehaviour[T]
 	ReactionRemoveHandler HandlerBehaviour[T]
 }
 
