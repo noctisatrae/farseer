@@ -59,10 +59,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-
-	ticker := time.NewTicker(3 * time.Second)
-	defer ticker.Stop()
-
+	
 	gossipsubPort, err := strconv.Atoi(os.Getenv("GOSSIPSUB_PORT"))
 	if err != nil {
 		log.Fatal("Can't parse default gossipsub port, QUITING! |", "Error", err)
