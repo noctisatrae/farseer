@@ -22,7 +22,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
-	
+
 	"github.com/multiformats/go-multiaddr"
 	"github.com/multiformats/go-multiaddr-dns"
 )
@@ -134,7 +134,7 @@ func main() {
 	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
-	go func () {
+	go func() {
 		for {
 			netwContact.PublishContactInfo(&protos.ContactInfoContent{
 				HubVersion: "2024.5.1",
