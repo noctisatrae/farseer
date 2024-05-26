@@ -115,8 +115,6 @@ func (netw *Network) readLoop() {
 		// if message received is from me => don't care
 		if msg.ReceivedFrom == netw.self {
 			continue
-		} else {
-			netw.logger.Debug("Received a message! |")
 		}
 
 		netwMsg := new(protos.GossipMessage)
