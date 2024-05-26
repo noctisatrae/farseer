@@ -43,7 +43,7 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 
 func logMessages(messages chan *protos.GossipMessage, local log.Logger) {
 	for msg := range messages {
-		local.Info("RECEIVED |", "msg", msg.GetContent())
+		local.Info("RECEIVED |", "msg", msg)
 	}
 }
 
@@ -59,7 +59,7 @@ func main() {
 	}
 
 	ctx := context.Background()
-	
+
 	gossipsubPort, err := strconv.Atoi(os.Getenv("GOSSIPSUB_PORT"))
 	if err != nil {
 		log.Fatal("Can't parse default gossipsub port, QUITING! |", "Error", err)
@@ -133,8 +133,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	go logMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
-	go logMessages(netwContact.NetworkMessage, netwContact.logger)
+	handler := Handler[any]{}
+	handler.CastAddHandler = func(data *protos.MessageData) (any, error) {
+		return data.Body, nil
+	}
+
+	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	netwContact.PublishContactInfo(&protos.ContactInfoContent{
