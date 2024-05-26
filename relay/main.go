@@ -132,6 +132,7 @@ func main() {
 
 	// go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
+	go HandleContactInfo(netwContact.NetworkMessage, netwContact.logger, h, ctx)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	go func() {
