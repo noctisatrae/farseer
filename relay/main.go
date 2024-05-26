@@ -20,6 +20,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/libp2p/go-libp2p/p2p/security/noise"
 
 	"github.com/multiformats/go-multiaddr"
 	"github.com/multiformats/go-multiaddr-dns"
@@ -78,6 +79,7 @@ func main() {
 		libp2p.ListenAddrStrings(
 			fmt.Sprintf("/ip4/0.0.0.0/tcp/%s", os.Getenv("GOSSIPSUB_PORT")),
 		),
+		libp2p.Security(noise.ID, noise.New),
 		libp2p.Muxer("/mplex/6.7.0", mplex.DefaultTransport),
 	)
 	if err != nil {
