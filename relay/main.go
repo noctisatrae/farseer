@@ -134,27 +134,41 @@ func main() {
 	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
-	netwContact.PublishContactInfo(&protos.ContactInfoContent{
-		HubVersion: "2024.5.1",
-		Network:    2,
-		GossipAddress: &protos.GossipAddressInfo{
-			Family:  4, // to know if address ip4/ip6?
-			Address: "92.158.95.48",
-			Port:    uint32(gossipsubPort),
-		},
-		Body: &protos.ContactInfoContentBody{
-			GossipAddress: &protos.GossipAddressInfo{
-				Family:  4,
-				Address: "92.158.95.48",
-				Port:    uint32(gossipsubPort),
-			},
-			HubVersion: "2024.5.1",
-			Network:    2,
-			Timestamp:  uint64(time.Now().Unix()),
-			AppVersion: "1.0",
-		},
-		Timestamp: uint64(time.Now().Unix()),
-	})
+	go func () {
+		for {
+			netwContact.PublishContactInfo(&protos.ContactInfoContent{
+				HubVersion: "2024.5.1",
+				Network:    2,
+				GossipAddress: &protos.GossipAddressInfo{
+					Family:  4, // to know if address ip4/ip6?
+					Address: "92.158.95.48",
+					Port:    uint32(gossipsubPort),
+				},
+				Body: &protos.ContactInfoContentBody{
+					GossipAddress: &protos.GossipAddressInfo{
+						Family:  4,
+						Address: "92.158.95.48",
+						Port:    uint32(gossipsubPort),
+					},
+					HubVersion: "2024.5.1",
+					Network:    2,
+					Timestamp:  uint64(time.Now().Unix()),
+					AppVersion: "1.0",
+				},
+				Timestamp: uint64(time.Now().Unix()),
+			})
+
+			intervalStr := os.Getenv("CONTACT_INTERVAL")
+			intervalInt, err := strconv.Atoi(intervalStr)
+			if err != nil {
+				log.Error("Couldn't parse CONTACT_INTERVAL from .env! Setting it to 30s... |", "Error", err)
+				intervalInt = 30
+			}
+			interval := time.Duration(intervalInt) * time.Second
+
+			time.Sleep(time.Duration(interval))
+		}
+	}()
 
 	h.Network().Notify(&network.NotifyBundle{
 		ConnectedF: func(n network.Network, c network.Conn) {
