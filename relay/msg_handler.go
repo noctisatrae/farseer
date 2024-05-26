@@ -16,7 +16,6 @@ type Handler struct {
 	ReactionRemoveHandler HandlerBehaviour
 }
 
-// T: What will be returned when the message is handled.
 func (handler Handler) handleMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 	for msgB := range messages { // i hope that the message only gives one message at a time so it's just O(n) and not O(n²)
 		for _, m := range msgB.GetMessageBundle().GetMessages() {
