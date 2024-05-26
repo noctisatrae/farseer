@@ -41,9 +41,9 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	}
 }
 
-func logMessages(messages chan *protos.Message, local log.Logger) {
+func logMessages(messages chan *protos.GossipMessage, local log.Logger) {
 	for msg := range messages {
-		local.Info("RECEIVED |", "msg", msg)
+		local.Info("RECEIVED |", "msg", msg.GetContent())
 	}
 }
 

@@ -16,7 +16,7 @@ import (
 )
 
 type Network struct {
-	NetworkMessage chan *protos.Message
+	NetworkMessage chan *protos.GossipMessage
 
 	ctx   context.Context
 	ps    *pubsub.PubSub
@@ -62,7 +62,7 @@ func (netw *Network) Publish(m *protos.GossipMessage) error {
 }
 
 func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, topicReq string) (*Network, error) {
-	req := fmt.Sprint("f_network_2_", topicReq)
+	req := fmt.Sprint("f_network_1_", topicReq)
 	log.Info("Suscribing to a new topic! |", "Topic", req)
 
 	topic, err := ps.Join(req)
@@ -94,7 +94,7 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		ps:             ps,
 		topic:          topic,
 		sub:            sub,
-		NetworkMessage: make(chan *protos.Message, bfrLgth),
+		NetworkMessage: make(chan *protos.GossipMessage, bfrLgth),
 		self:           selfId,
 		logger:         *ll,
 	}
@@ -116,10 +116,10 @@ func (netw *Network) readLoop() {
 		if msg.ReceivedFrom == netw.self {
 			continue
 		} else {
-			netw.logger.Debug("Received a message! |", "Msg", msg)
+			netw.logger.Debug("Received a message! |")
 		}
 
-		netwMsg := new(protos.Message)
+		netwMsg := new(protos.GossipMessage)
 		err = proto.Unmarshal(msg.Data, netwMsg)
 		if err != nil {
 			log.Error("Could not parse the incoming message! |", "error", err)
