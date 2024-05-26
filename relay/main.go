@@ -12,6 +12,7 @@ import (
 	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
+	"github.com/joho/godotenv"
 
 	// libp2p
 	"github.com/libp2p/go-libp2p"
@@ -21,15 +22,9 @@ import (
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
-
+	
 	"github.com/multiformats/go-multiaddr"
 	"github.com/multiformats/go-multiaddr-dns"
-
-	// "github.com/libp2p/go-libp2p/core/host"
-	// "github.com/libp2p/go-libp2p/core/peer"
-
-	// INITIAL secret var
-	"github.com/joho/godotenv"
 )
 
 func checkConnectionStatus(h host.Host, peerID peer.ID) {
@@ -38,19 +33,6 @@ func checkConnectionStatus(h host.Host, peerID peer.ID) {
 		log.Info("Successfully connected to peer! |", "peerID", peerID)
 	} else {
 		log.Warn("Not connected to peer |", "peerID", peerID)
-	}
-}
-
-func handleMessages(messages chan *protos.GossipMessage, ll log.Logger) {
-	for msgB := range messages {
-		for _, m := range msgB.GetMessageBundle().GetMessages() {
-			switch m.Data.Type {
-			case protos.MessageType_MESSAGE_TYPE_CAST_ADD:
-				ll.Info(m.Data.GetCastAddBody())
-			default:
-				ll.Info("", "Body", m.Data.Body, "Fid", m.Data.Fid)
-			}
-		}
 	}
 }
 
@@ -146,13 +128,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	// handler := Handler[any]{}
-	// handler.CastAddHandler = func(data *protos.MessageData) (any, error) {
-	// 	return data.Body, nil
-	// }
+	handler := Handler{}
 
 	// go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
-	go handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
+	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	netwContact.PublishContactInfo(&protos.ContactInfoContent{
