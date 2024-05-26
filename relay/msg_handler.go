@@ -14,6 +14,8 @@ type Handler struct {
 	FrameActionHandler    HandlerBehaviour
 	ReactionAddHandler    HandlerBehaviour
 	ReactionRemoveHandler HandlerBehaviour
+	LinkAddHandler        HandlerBehaviour
+	LinkRemoveHandler     HandlerBehaviour
 }
 
 func (handler Handler) handleMessages(messages chan *protos.GossipMessage, ll log.Logger) {
@@ -22,59 +24,58 @@ func (handler Handler) handleMessages(messages chan *protos.GossipMessage, ll lo
 			data := m.Data
 			switch data.Type {
 			case protos.MessageType_MESSAGE_TYPE_CAST_ADD:
-				{
-					if handler.CastAddHandler == nil {
-						ll.Info("New cast published! |", "Body", data.GetCastAddBody())
-					} else {
-						err := handler.CastAddHandler(data)
-						if err != nil {
-							ll.Error("CastAdd handler encountered an error! |", "Error", err)
-						}
+				if handler.CastAddHandler == nil {
+					ll.Info("New cast published! |", "Body", data.GetCastAddBody())
+				} else {
+					err := handler.CastAddHandler(data)
+					if err != nil {
+						ll.Error("CastAdd handler encountered an error! |", "Error", err)
 					}
 				}
 			case protos.MessageType_MESSAGE_TYPE_CAST_REMOVE:
-				{
-					if handler.CastRemoveHandler == nil {
-						ll.Info("Cast was just removed! |", "Body", data.GetCastRemoveBody())
-					} else {
-						err := handler.CastRemoveHandler(data)
-						if err != nil {
-							ll.Error("CastRemove handler encountered an error! |", "Error", err)
-						}
+				if handler.CastRemoveHandler == nil {
+					ll.Info("Cast was just removed! |", "Body", data.GetCastRemoveBody())
+				} else {
+					err := handler.CastRemoveHandler(data)
+					if err != nil {
+						ll.Error("CastRemove handler encountered an error! |", "Error", err)
 					}
 				}
 			case protos.MessageType_MESSAGE_TYPE_FRAME_ACTION:
-				{
-					if handler.FrameActionHandler == nil {
-						ll.Info("New frame interaction! |", "Action", data.GetFrameActionBody())
-					} else {
-						err := handler.FrameActionHandler(data)
-						if err != nil {
-							ll.Error("FrameAction handler encountered an error! |", "Error", err)
-						}
+				if handler.FrameActionHandler == nil {
+					ll.Info("New frame interaction! |", "Action", data.GetFrameActionBody())
+				} else {
+					err := handler.FrameActionHandler(data)
+					if err != nil {
+						ll.Error("FrameAction handler encountered an error! |", "Error", err)
 					}
 				}
 			case protos.MessageType_MESSAGE_TYPE_REACTION_ADD:
-				{
-					if handler.ReactionAddHandler == nil {
-						ll.Info("New reaction added! |", "Reaction", data.GetReactionBody())
-					} else {
-						err := handler.ReactionAddHandler(data)
-						if err != nil {
-							ll.Error("ReactionAdd handler encountered an error! |", "Error", err)
-						}
+				if handler.ReactionAddHandler == nil {
+					ll.Info("New reaction added! |", "Reaction", data.GetReactionBody())
+				} else {
+					err := handler.ReactionAddHandler(data)
+					if err != nil {
+						ll.Error("ReactionAdd handler encountered an error! |", "Error", err)
 					}
 				}
 			case protos.MessageType_MESSAGE_TYPE_REACTION_REMOVE:
-				{
-					if handler.ReactionRemoveHandler == nil {
-						ll.Info("A reaction was removed! |", "Reaction", data.GetReactionBody())
-						return
-					} else {
-						err := handler.ReactionRemoveHandler(data)
-						if err != nil {
-							ll.Error("ReactionRemove handler encountered an error! |", "Error", err)
-						}
+				if handler.ReactionRemoveHandler == nil {
+					ll.Info("A reaction was removed! |", "Reaction", data.GetReactionBody())
+					return
+				} else {
+					err := handler.ReactionRemoveHandler(data)
+					if err != nil {
+						ll.Error("ReactionRemove handler encountered an error! |", "Error", err)
+					}
+				}
+			case protos.MessageType_MESSAGE_TYPE_LINK_ADD:
+				if handler.LinkAddHandler == nil {
+					ll.Info("A link was added! |", "Link", data.GetLinkBody())
+				} else {
+					err := handler.LinkAddHandler(data)
+					if err != nil {
+						ll.Error("LinkAdd handler encountered an error! |", "Error", err)
 					}
 				}
 			default:
