@@ -137,9 +137,6 @@ func main() {
 	go logMessages(netwContact.NetworkMessage, netwContact.logger)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
-	log.Info("Waiting 5s for the network to pick up our arrival!")
-	time.Sleep(5 * time.Second)
-
 	netwContact.PublishContactInfo(&protos.ContactInfoContent{
 		HubVersion: "2024.5.1",
 		Network:    2,
