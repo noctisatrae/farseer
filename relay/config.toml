@@ -6,3 +6,12 @@ BootstrapPeers = [
 Debug = true
 BufferSize = 128
 ContactInterval = 30
+
+# [server.rpc]
+# Enabled = true
+# Port = 2334
+
+# [database.redis]
+# Enabled = true
+# RemotePort = 6379
+# Credidentials = {user = "root", passwd = "toor"}
