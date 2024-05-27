@@ -61,7 +61,7 @@ func (netw *Network) Publish(m *protos.GossipMessage) error {
 	return err
 }
 
-func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, topicReq string) (*Network, error) {
+func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, topicReq string, conf Config) (*Network, error) {
 	req := fmt.Sprint("f_network_1_", topicReq)
 	log.Info("Suscribing to a new topic! |", "Topic", req)
 
@@ -75,16 +75,11 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		log.Fatal(err.Error())
 	}
 
-	conf, err := Load("./relay/config.toml")
-	if err != nil {
-		log.Error("Couldn't parse config file! |", "Error", err)
-	}
-
 	ll := log.NewWithOptions(os.Stderr, log.Options{
 		Prefix: topicReq,
 	})
 
-	if conf.Debug {
+	if conf.Hub.Debug {
 		ll.SetLevel(log.DebugLevel)
 	}
 
@@ -93,7 +88,7 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		ps:             ps,
 		topic:          topic,
 		sub:            sub,
-		NetworkMessage: make(chan *protos.GossipMessage, conf.BufferSize),
+		NetworkMessage: make(chan *protos.GossipMessage, conf.Hub.BufferSize),
 		self:           selfId,
 		logger:         *ll,
 	}

@@ -42,12 +42,12 @@ func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 }
 
 func main() {
-	conf, err := Load("./relay/config.toml")
+	conf, err := Load("./config.toml")
 	if err != nil {
 		log.Error("Couldn't parse config file! |", "Error", err)
 	}
 
-	if conf.Debug {
+	if conf.Hub.Debug {
 		log.SetLevel(log.DebugLevel)
 		log.Debug("Debugging mode enabled! Have fun :D")
 	}
@@ -63,7 +63,7 @@ func main() {
 	h, err := libp2p.New(
 		libp2p.Ping(true),
 		libp2p.ListenAddrStrings(
-			fmt.Sprintf("/ip4/0.0.0.0/tcp/%s", strconv.FormatUint(uint64(conf.GossipPort), 10)),
+			fmt.Sprintf("/ip4/0.0.0.0/tcp/%s", strconv.FormatUint(uint64(conf.Hub.GossipPort), 10)),
 		),
 		libp2p.Security(noise.ID, noise.New),
 		libp2p.Muxer("/mplex/6.7.0", mplex.DefaultTransport),
@@ -74,7 +74,7 @@ func main() {
 
 	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
-	initPeer, err := multiaddr.NewMultiaddr(conf.BootstrapPeers[0])
+	initPeer, err := multiaddr.NewMultiaddr(conf.Hub.BootstrapPeers[0])
 	if err != nil {
 		log.Fatal("Couldn't parse multiaddr!", "Error", err)
 	}
@@ -107,17 +107,17 @@ func main() {
 		log.Error(err)
 	}
 
-	netwPrimary, err := ReceiveMessages(ctx, ps, h.ID(), "primary")
+	netwPrimary, err := ReceiveMessages(ctx, ps, h.ID(), "primary", conf)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	netwContact, err := ReceiveMessages(ctx, ps, h.ID(), "contact_info")
+	netwContact, err := ReceiveMessages(ctx, ps, h.ID(), "contact_info", conf)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	netwDiscovery, err := ReceiveMessages(ctx, ps, h.ID(), "peer_discovery")
+	netwDiscovery, err := ReceiveMessages(ctx, ps, h.ID(), "peer_discovery", conf)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -130,7 +130,7 @@ func main() {
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
 	go func() {
-		ticker := time.NewTicker(time.Duration(conf.ContactInterval) * time.Second)
+		ticker := time.NewTicker(time.Duration(conf.Hub.ContactInterval) * time.Second)
 		defer ticker.Stop()
 
 		for {
@@ -141,13 +141,13 @@ func main() {
 				GossipAddress: &protos.GossipAddressInfo{
 					Family:  4, // to know if address ip4/ip6?
 					Address: "92.158.95.48",
-					Port:    uint32(conf.GossipPort),
+					Port:    uint32(conf.Hub.GossipPort),
 				},
 				Body: &protos.ContactInfoContentBody{
 					GossipAddress: &protos.GossipAddressInfo{
 						Family:  4,
 						Address: "92.158.95.48",
-						Port:    uint32(conf.GossipPort),
+						Port:    uint32(conf.Hub.GossipPort),
 					},
 					HubVersion: "2024.5.1",
 					Network:    2,
