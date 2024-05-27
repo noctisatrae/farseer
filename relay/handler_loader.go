@@ -13,7 +13,7 @@ import (
 	"github.com/charmbracelet/log"
 )
 
-func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger) (error) {
+func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger) error {
 	pl, err := plugin.Open(fmt.Sprintf("../compiled_handlers/%s.so", name))
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 	}
 
 	plEventHandlers := *plEventHandlersSymbol.(*handlers.Handler)
-	
+
 	go plEventHandlers.HandleMessages(messages, ll)
 
 	return nil
@@ -40,7 +40,7 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 			keys = append(keys, isKEnabled.(string))
 		}
 	}
-	
+
 	availableHandlers, err := ListCompiledHandlers()
 	if err != nil {
 		ll.Error("Couldn't get available handlers from folder!")
@@ -79,7 +79,7 @@ func containsGeneric[T comparable](b []T, e T) bool {
 
 func ListCompiledHandlers() ([]string, error) {
 	plList := []string{}
-	
+
 	dirEntries, err := os.ReadDir("../compiled_handlers")
 	if err != nil {
 		return []string{}, err
