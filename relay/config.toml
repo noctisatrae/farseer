@@ -1,0 +1,8 @@
+[hub]
+GossipPort = 2282
+BootstrapPeers = [
+  "/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"
+]
+Debug = true
+BufferSize = 128
+ContactInterval = 30
