@@ -35,7 +35,6 @@ require (
 	github.com/ipfs/go-log/v2 v2.5.1 // indirect
 	github.com/jackpal/go-nat-pmp v1.0.2 // indirect
 	github.com/jbenet/go-temp-err-catcher v0.1.0 // indirect
-	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/koron/go-ssdp v0.0.4 // indirect
@@ -74,6 +73,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.15.0 // indirect
 	github.com/opencontainers/runtime-spec v1.2.0 // indirect
 	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
+	github.com/pelletier/go-toml/v2 v2.2.2
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
 	github.com/prometheus/client_model v0.6.0 // indirect

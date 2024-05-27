@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	protos "farseer/protos"
 	"fmt"
 	"os"
-	"strconv"
 	"time"
+
+	protos "farseer/protos"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"
@@ -75,18 +75,17 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		log.Fatal(err.Error())
 	}
 
+	conf, err := Load("./relay/config.toml")
+	if err != nil {
+		log.Error("Couldn't parse config file! |", "Error", err)
+	}
+
 	ll := log.NewWithOptions(os.Stderr, log.Options{
 		Prefix: topicReq,
 	})
 
-	if os.Getenv("CONTEXT") == "DEBUG" {
+	if conf.Debug {
 		ll.SetLevel(log.DebugLevel)
-	}
-
-	bfrLgth, err := strconv.Atoi(os.Getenv("BUFFER"))
-	if err != nil {
-		bfrLgth = 128
-		ll.Warn("Overriding provided buffer length! |", "Err", err, "Default", bfrLgth)
 	}
 
 	netw := &Network{
@@ -94,7 +93,7 @@ func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, top
 		ps:             ps,
 		topic:          topic,
 		sub:            sub,
-		NetworkMessage: make(chan *protos.GossipMessage, bfrLgth),
+		NetworkMessage: make(chan *protos.GossipMessage, conf.BufferSize),
 		self:           selfId,
 		logger:         *ll,
 	}
