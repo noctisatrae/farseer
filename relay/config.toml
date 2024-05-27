@@ -3,15 +3,12 @@ GossipPort = 2282
 BootstrapPeers = [
   "/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"
 ]
-Debug = true
+Debug = false
 BufferSize = 128
 ContactInterval = 30
 
-# [server.rpc]
-# Enabled = true
-# Port = 2334
+[servers.rpc]
+enabled = true
 
-# [database.redis]
-# Enabled = true
-# RemotePort = 6379
-# Credidentials = {user = "root", passwd = "toor"}
+[databases]
+redis = {enabled = true}
