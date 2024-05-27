@@ -21,3 +21,5 @@ TODO (follow the order):
 - Grafana dashboard
 - Plugin system
 - JS/TS SDK => release day!!
+
+https://toml.io/en/v1.0.0
