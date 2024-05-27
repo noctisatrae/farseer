@@ -16,7 +16,8 @@ IDEAS of what I can do with this:
 IDEAS OF HANDLERS:
 - Apple APNS server who pushes notification when a certain condition on the network is met.
 
-TODO:
-- JS/TS SDK
+TODO (follow the order):
+- Support multiple bootstrap addresses
 - Grafana dashboard
-- Binary/Library?
+- Plugin system
+- JS/TS SDK => release day!!
