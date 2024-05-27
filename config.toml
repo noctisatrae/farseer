@@ -9,6 +9,3 @@ ContactInterval = 30
 
 [servers.rpc]
 enabled = true
-
-[databases]
-redis = {enabled = true}
