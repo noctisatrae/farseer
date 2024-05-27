@@ -42,7 +42,7 @@ func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 }
 
 func main() {
-	conf, err := Load("./config.toml")
+	conf, err := Load("../config.toml")
 	if err != nil {
 		log.Error("Couldn't parse config file! |", "Error", err)
 	}
@@ -122,10 +122,11 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	handler := Handler{}
+	err = LoadHandler("rpc", netwPrimary.NetworkMessage, netwPrimary.logger)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
-	go handler.handleMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go HandleContactInfo(netwContact.NetworkMessage, netwContact.logger, h, ctx)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
