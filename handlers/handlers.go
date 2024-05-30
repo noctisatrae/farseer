@@ -16,10 +16,9 @@ type Handler struct {
 	ReactionRemoveHandler HandlerBehaviour
 	LinkAddHandler        HandlerBehaviour
 	LinkRemoveHandler     HandlerBehaviour
-	Params                map[string]interface{}
 }
 
-func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll log.Logger) {
+func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll log.Logger, params map[string]interface{}) {
 	for msgB := range messages { // i hope that the message only gives one message at a time so it's just O(n) and not O(n²)
 		for _, m := range msgB.GetMessageBundle().GetMessages() {
 			data := m.Data
@@ -28,7 +27,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.CastAddHandler == nil {
 					ll.Info("New cast published! |", "Body", data.GetCastAddBody())
 				} else {
-					err := handler.CastAddHandler(data, handler.Params)
+					err := handler.CastAddHandler(data, params)
 					if err != nil {
 						ll.Error("CastAdd handler encountered an error! |", "Error", err)
 					}
@@ -37,7 +36,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.CastRemoveHandler == nil {
 					ll.Info("Cast was just removed! |", "Body", data.GetCastRemoveBody())
 				} else {
-					err := handler.CastRemoveHandler(data, handler.Params)
+					err := handler.CastRemoveHandler(data, params)
 					if err != nil {
 						ll.Error("CastRemove handler encountered an error! |", "Error", err)
 					}
@@ -46,7 +45,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.FrameActionHandler == nil {
 					ll.Info("New frame interaction! |", "Action", data.GetFrameActionBody())
 				} else {
-					err := handler.FrameActionHandler(data, handler.Params)
+					err := handler.FrameActionHandler(data, params)
 					if err != nil {
 						ll.Error("FrameAction handler encountered an error! |", "Error", err)
 					}
@@ -55,7 +54,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.ReactionAddHandler == nil {
 					ll.Info("New reaction added! |", "Reaction", data.GetReactionBody())
 				} else {
-					err := handler.ReactionAddHandler(data, handler.Params)
+					err := handler.ReactionAddHandler(data, params)
 					if err != nil {
 						ll.Error("ReactionAdd handler encountered an error! |", "Error", err)
 					}
@@ -64,7 +63,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.ReactionRemoveHandler == nil {
 					ll.Info("A reaction was removed! |", "Reaction", data.GetReactionBody())
 				} else {
-					err := handler.ReactionRemoveHandler(data, handler.Params)
+					err := handler.ReactionRemoveHandler(data, params)
 					if err != nil {
 						ll.Error("ReactionRemove handler encountered an error! |", "Error", err)
 					}
@@ -73,7 +72,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.LinkAddHandler == nil {
 					ll.Info("A link was added! |", "Link", data.GetLinkBody())
 				} else {
-					err := handler.LinkAddHandler(data, handler.Params)
+					err := handler.LinkAddHandler(data, params)
 					if err != nil {
 						ll.Error("LinkAdd handler encountered an error! |", "Error", err)
 					}
@@ -82,7 +81,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				if handler.LinkRemoveHandler == nil {
 					ll.Info("A link was removed! |", "Link", data.GetLinkBody())
 				} else {
-					err := handler.LinkAddHandler(data, handler.Params)
+					err := handler.LinkAddHandler(data, params)
 					if err != nil {
 						ll.Error("LinkRemove handler encountered an error! |", "Error", err)
 					}
