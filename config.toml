@@ -7,6 +7,6 @@ Debug = false
 BufferSize = 128
 ContactInterval = 30
 
-[handlers.rpc]
+[handlers.postgresql]
 Enabled = true
-params = { hello = "world" }
+params = {password = "hello"}
