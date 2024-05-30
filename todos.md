@@ -11,7 +11,12 @@
 
 ## plugin ideas
 - [ ] Find a way to make a `JS`/`TS` sdk!
-- [ ] Sink to RedisDB/Dragonfly/NoSQL DB (sink to DB)
+- [X] Sink to RedisDB/Dragonfly/NoSQL DB (sink to DB) => in process of doing it!
 - [ ] Simple cast filter/cast tracker (for example of use of the handler API)
 
+## libp2p stuff
+- [ ] Do I need to regossip the messages? 
+
 ## PostgreSQL
+- [ ] Disable saving certain types of messages in the chat from `config.toml`
+- [ ] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
