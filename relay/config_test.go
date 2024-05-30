@@ -33,5 +33,5 @@ func TestParamsFromConf(t *testing.T) {
 	conf, err := Load("../config.toml")
 	assert.NoError(t, err)
 
-	assert.Equal(t, map[string]interface{}{"password": "hello"}, conf.GetParams("postgresql"))
+	assert.Equal(t, map[string]interface{}{"DbAddress": "REDACTED"}, conf.GetParams("postgresql"))
 }
