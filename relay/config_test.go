@@ -27,3 +27,11 @@ func TestLoadConfig(t *testing.T) {
 	// dynamic conf
 	assert.Equal(t, true, rpcConf.(map[string]interface{})["Enabled"])
 }
+
+// can we get the params from a handler's configuration?
+func TestParamsFromConf(t *testing.T) {
+	conf, err := Load("../config.toml")
+	assert.NoError(t, err)
+
+	assert.Equal(t, map[string]interface{}{"hello": "world"}, conf.GetParams("rpc"))
+}
