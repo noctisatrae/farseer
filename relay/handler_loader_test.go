@@ -19,7 +19,7 @@ func TestIndividualLoader(t *testing.T) {
 	assert.NoError(t, err)
 
 	messages := make(chan *protos.GossipMessage)
-	err = LoadHandler("rpc", messages, ll, conf)
+	err = LoadHandler("postgresql", messages, ll, conf)
 	assert.NoError(t, err)
 }
 
