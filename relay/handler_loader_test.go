@@ -30,7 +30,7 @@ func TestListCompiledHandlers(t *testing.T) {
 	handlerList, err := ListCompiledHandlers()
 	assert.NoError(t, err)
 
-	assert.Equal(t, []string{"rpc"}, handlerList)
+	assert.Equal(t, []string{"postgresql", "rpc"}, handlerList)
 }
 
 // What handlers do I get from conf?
@@ -42,7 +42,7 @@ func TestHandlersFromConf(t *testing.T) {
 
 	keyArr := conf.GetHandlers()
 
-	assert.Equal(t, []string{"rpc"}, keyArr)
+	assert.Equal(t, []string{"postgresql"}, keyArr)
 }
 
 // Verify if a handler is loaded if 1. it is enabled 2. it is compiled
@@ -57,7 +57,7 @@ func TestWhatWillBeLoaded(t *testing.T) {
 
 	whatWillBeLoaded := intesectionOfArrays(conf.GetHandlers(), compiledHandlers)
 
-	assert.Equal(t, []string{"rpc"}, whatWillBeLoaded)
+	assert.Equal(t, []string{"postgresql"}, whatWillBeLoaded)
 }
 
 // can we load all the handlers without errors?
