@@ -47,6 +47,9 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 	plEventHandlers := *plEventHandlersSymbol.(*handlers.Handler)
 
 	params := conf.GetParams(name)
+	if params == nil {
+		params = map[string]interface{}{}
+	}
 	go plEventHandlers.HandleMessages(messages, ll, params)
 
 	return nil
