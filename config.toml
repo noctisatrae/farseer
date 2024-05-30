@@ -9,9 +9,4 @@ ContactInterval = 30
 
 [handlers.rpc]
 Enabled = true
-
-[handlers.http]
-Enabled = false
-
-[handlers.redis]
-Enabled = false
+params = { hello = "world" }
