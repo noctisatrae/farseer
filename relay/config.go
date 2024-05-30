@@ -58,7 +58,7 @@ func (conf Config) GetHandlers() []string {
 			keys = append(keys, k)
 		} else if isKEnabled == nil {
 			return keys
-			} 
+		}
 	}
 	return keys
 }
