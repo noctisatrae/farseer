@@ -15,8 +15,7 @@ type HubParams struct {
 
 type Config struct {
 	Hub       HubParams
-	Servers   map[string]interface{} `toml:"servers"`
-	Databases map[string]interface{} `toml:"databases"`
+	Handlers   map[string]interface{} `toml:"handlers"`
 }
 
 func Load(path string) (Config, error) {
@@ -46,20 +45,6 @@ func Load(path string) (Config, error) {
 				ContactInterval: 30,
 			},
 		}, err
-	}
-
-	var serverData map[string]interface{}
-	if err = toml.Unmarshal(fileByte, &serverData); err == nil {
-		if servers, ok := serverData["servers"].(map[string]interface{}); ok {
-			config.Servers = servers
-		}
-	}
-
-	var databasesData map[string]interface{}
-	if err = toml.Unmarshal(fileByte, &serverData); err == nil {
-		if databases, ok := databasesData["databases"].(map[string]interface{}); ok {
-			config.Databases = databases
-		}
 	}
 
 	return config, nil
