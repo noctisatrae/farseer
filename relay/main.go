@@ -122,7 +122,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	err = LoadHandler("rpc", netwPrimary.NetworkMessage, netwPrimary.logger)
+	err = LoadHandler("rpc", netwPrimary.NetworkMessage, netwPrimary.logger, conf)
 	if err != nil {
 		log.Fatal(err)
 	}
