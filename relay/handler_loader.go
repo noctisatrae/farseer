@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"plugin"
-	"reflect"
 	"strings"
 
 	"farseer/handlers"
@@ -12,6 +11,37 @@ import (
 
 	"github.com/charmbracelet/log"
 )
+
+func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll log.Logger) error {
+	keys := GetHandlersFromConf(conf)
+
+	availableHandlers, err := ListCompiledHandlers()
+	if err != nil {
+		ll.Error("Couldn't get available handlers from folder!")
+		return err
+	}
+
+	for _, el := range intesectionOfArrays(keys, availableHandlers) {
+		err = LoadHandler(el, messages, ll)
+		if err != nil {
+			ll.Error("Couldn't load handlers from conf! |", "Error", err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func GetHandlersFromConf(conf Config) []string {
+	keys := []string{}
+	for k := range conf.Handlers {
+		isKEnabled := conf.Handlers[k].(map[string]interface{})["Enabled"]
+		if isKEnabled == true {
+			keys = append(keys, k)
+		}
+	}
+	return keys
+}
 
 func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger) error {
 	pl, err := plugin.Open(fmt.Sprintf("../compiled_handlers/%s.so", name))
@@ -30,30 +60,6 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 	go plEventHandlers.HandleMessages(messages, ll)
 
 	return nil
-}
-
-func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll log.Logger) {
-	keys := make([]string, 0, len(conf.Servers))
-	for k := range conf.Servers {
-		isKEnabled := conf.Servers[k].(map[string]interface{})["enabled"]
-		if isKEnabled == true && reflect.TypeOf(isKEnabled).String() == "string" {
-			keys = append(keys, isKEnabled.(string))
-		}
-	}
-
-	availableHandlers, err := ListCompiledHandlers()
-	if err != nil {
-		ll.Error("Couldn't get available handlers from folder!")
-		return
-	}
-
-	for _, el := range intesectionOfArrays(keys, availableHandlers) {
-		err = LoadHandler(el, messages, ll)
-		if err != nil {
-			ll.Error("Couldn't load handlers from conf! |", "Error", err)
-			return
-		}
-	}
 }
 
 func intesectionOfArrays[T comparable](a []T, b []T) []T {
