@@ -49,3 +49,25 @@ func Load(path string) (Config, error) {
 
 	return config, nil
 }
+
+func (conf Config) GetHandlers() []string {
+	keys := []string{}
+	for k := range conf.Handlers {
+		isKEnabled := conf.Handlers[k].(map[string]interface{})["Enabled"]
+		if isKEnabled == true {
+			keys = append(keys, k)
+		} else if isKEnabled == nil {
+			return keys
+			} 
+	}
+	return keys
+}
+
+func (conf Config) GetParams(handler string) map[string]interface{} {
+	params := conf.Handlers[handler].(map[string]interface{})["params"]
+	if params == nil {
+		return map[string]interface{}{}
+	}
+
+	return params.(map[string]interface{})
+}
