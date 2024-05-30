@@ -9,4 +9,4 @@ ContactInterval = 30
 
 [handlers.postgresql]
 Enabled = true
-params = {password = "hello"}
+Params = { DbAddress = "REDACTED" }
