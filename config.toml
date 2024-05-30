@@ -7,5 +7,11 @@ Debug = false
 BufferSize = 128
 ContactInterval = 30
 
-[servers.rpc]
-enabled = true
+[handlers.rpc]
+Enabled = true
+
+[handlers.http]
+Enabled = false
+
+[handlers.redis]
+Enabled = false
