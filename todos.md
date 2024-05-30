@@ -11,5 +11,8 @@
 
 ## plugin ideas
 - [ ] Find a way to make a `JS`/`TS` sdk!
-- [ ] Sink to RedisDB/Dragonfly/NoSQL DB
+- [ ] Sink to RedisDB/Dragonfly/NoSQL DB (sink to DB)
 - [ ] Simple cast filter/cast tracker (for example of use of the handler API)
+
+## PostgreSQL
+- [ ] https://github.com/lib/pq 
