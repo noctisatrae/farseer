@@ -13,7 +13,7 @@ func TestLoadConfig(t *testing.T) {
 	conf, err := Load("../config.toml")
 	assert.NoError(t, err)
 
-	rpcConf := conf.Servers["rpc"]
+	rpcConf := conf.Handlers["rpc"]
 
 	// always-the-same option test
 	assert.Equal(t, HubParams{
@@ -25,5 +25,5 @@ func TestLoadConfig(t *testing.T) {
 	}, conf.Hub)
 
 	// dynamic conf
-	assert.Equal(t, true, rpcConf.(map[string]interface{})["enabled"])
+	assert.Equal(t, true, rpcConf.(map[string]interface{})["Enabled"])
 }
