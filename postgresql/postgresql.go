@@ -21,13 +21,12 @@ import (
 //
 // Parameters:
 // - params: A map containing configuration parameters.
-//
 func InitBehaviour(params map[string]interface{}) error {
 	dbAddr := params["DbAddress"]
 	if dbAddr == nil {
 		return errors.New("no DbAddress was provided, so no connection can be made to the DB")
 	}
-	
+
 	conn, err := pgx.Connect(context.Background(), dbAddr.(string))
 	if err != nil {
 		return err
@@ -50,8 +49,8 @@ func CastRemoveHandler(data *protos.MessageData, params map[string]interface{}) 
 
 // Exported variable
 var PluginHandler = handler.Handler{
-	Name: "PostgreSQL",
-	InitHandler: InitBehaviour,
+	Name:              "PostgreSQL",
+	InitHandler:       InitBehaviour,
 	CastAddHandler:    CastAddHandler,
 	CastRemoveHandler: CastRemoveHandler,
 }
