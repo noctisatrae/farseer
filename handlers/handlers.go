@@ -6,9 +6,25 @@ import (
 	"github.com/charmbracelet/log"
 )
 
+type InitBehaviour func(params map[string]interface{}) error
 type HandlerBehaviour func(data *protos.MessageData, params map[string]interface{}) error
 
 type Handler struct {
+	// The name of the plugin/custom handler - used for contextualization in logs.
+	Name string
+	// The function that is run at the start of the handling of messages. If you need to create an instance of a DB,
+	// you need to mutate the params map passed to the functions without overriding something you might need.
+	// Here's a little example:
+	// func InitBehaviour(params map[string]interface{}) error {
+	// 	params["dbConn"] = conn.New()
+	//  params["counter"] += 1 // if it already exists from config.toml!
+	// 	return nil
+	// }
+	// Obviously, it's over-simplified without all the error handling & log reporting... I would also advise you to make a
+	// rough scheme of the look of your params map. Because it's an interface and not a strongly typed struct, it can lead to
+	// panicking if things aren't well queried.
+	// You also might want some checks to see if the info you need from the config are there!
+	InitHandler           InitBehaviour
 	CastAddHandler        HandlerBehaviour
 	CastRemoveHandler     HandlerBehaviour
 	FrameActionHandler    HandlerBehaviour
@@ -19,7 +35,14 @@ type Handler struct {
 }
 
 func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll log.Logger, params map[string]interface{}) {
-	for msgB := range messages { // i hope that the message only gives one message at a time so it's just O(n) and not O(n²)
+	if handler.InitHandler == nil {
+	} else {
+		err := handler.InitHandler(params)
+		if err != nil {
+			ll.Error("A handler encountered a problem! |", "Name", handler.Name, "Error", err)
+		}
+	}
+	for msgB := range messages { // i hope that the chan only gives one message at a time so it's just O(n) and not O(n²)
 		for _, m := range msgB.GetMessageBundle().GetMessages() {
 			data := m.Data
 			switch data.Type {
