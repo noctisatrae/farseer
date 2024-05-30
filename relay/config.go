@@ -14,8 +14,8 @@ type HubParams struct {
 }
 
 type Config struct {
-	Hub       HubParams
-	Handlers   map[string]interface{} `toml:"handlers"`
+	Hub      HubParams
+	Handlers map[string]interface{} `toml:"handlers"`
 }
 
 func Load(path string) (Config, error) {
