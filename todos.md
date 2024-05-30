@@ -15,4 +15,3 @@
 - [ ] Simple cast filter/cast tracker (for example of use of the handler API)
 
 ## PostgreSQL
-- [ ] https://github.com/lib/pq 
