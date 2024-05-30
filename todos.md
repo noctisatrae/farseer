@@ -20,3 +20,4 @@
 ## PostgreSQL
 - [ ] Disable saving certain types of messages in the chat from `config.toml`
 - [ ] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
+- [ ] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
