@@ -127,6 +127,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	LoadHandlersFromConf(conf, netwPrimary.NetworkMessage, netwPrimary.logger)
 	go HandleContactInfo(netwContact.NetworkMessage, netwContact.logger, h, ctx)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
