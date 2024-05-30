@@ -3,16 +3,17 @@ package main
 import (
 	handler "farseer/handlers"
 	protos "farseer/protos"
-	"fmt"
+
+	"github.com/charmbracelet/log"
 )
 
-func CastAddHandler(data *protos.MessageData) error {
-	fmt.Printf("Cast added: %s", data.GetCastAddBody())
+func CastAddHandler(data *protos.MessageData, params map[string]interface{}) error {
+	log.Debug("PLUGIN LOADED!", "Params", params, "Data", data)
 	return nil
 }
 
-func CastRemoveHandler(data *protos.MessageData) error {
-	fmt.Printf("Cast removed: %s", data.GetCastRemoveBody())
+func CastRemoveHandler(data *protos.MessageData, params map[string]interface{}) error {
+	log.Debug("PLUGIN LOADED!", "Params", params, "Data", data)
 	return nil
 }
 
@@ -20,5 +21,6 @@ func CastRemoveHandler(data *protos.MessageData) error {
 var PluginHandler = handler.Handler{
 	CastAddHandler:        CastAddHandler,
 	CastRemoveHandler:     CastRemoveHandler,
+	Params: 							 map[string]interface{}{"hello": true},
 	// Initialize other handlers as needed...
 }
