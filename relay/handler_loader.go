@@ -13,7 +13,7 @@ import (
 )
 
 func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll log.Logger) error {
-	keys := GetHandlersFromConf(conf)
+	keys := conf.GetHandlers()
 
 	availableHandlers, err := ListCompiledHandlers()
 	if err != nil {
@@ -30,17 +30,6 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 	}
 
 	return nil
-}
-
-func GetHandlersFromConf(conf Config) []string {
-	keys := []string{}
-	for k := range conf.Handlers {
-		isKEnabled := conf.Handlers[k].(map[string]interface{})["Enabled"]
-		if isKEnabled == true {
-			keys = append(keys, k)
-		}
-	}
-	return keys
 }
 
 func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger) error {

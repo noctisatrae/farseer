@@ -37,7 +37,7 @@ func TestHandlersFromConf(t *testing.T) {
 	conf, err := Load("../config.toml")
 	assert.NoError(t, err)
 
-	keyArr := GetHandlersFromConf(conf)
+	keyArr := conf.GetHandlers()
 
 	assert.Equal(t, []string{"rpc"}, keyArr)
 }
@@ -52,7 +52,7 @@ func TestWhatWillBeLoaded(t *testing.T) {
 	compiledHandlers, err := ListCompiledHandlers()
 	assert.NoError(t, err)
 
-	whatWillBeLoaded := intesectionOfArrays(GetHandlersFromConf(conf), compiledHandlers)
+	whatWillBeLoaded := intesectionOfArrays(conf.GetHandlers(), compiledHandlers)
 
 	assert.Equal(t, []string{"rpc"}, whatWillBeLoaded)
 }
