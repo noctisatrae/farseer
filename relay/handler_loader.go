@@ -22,7 +22,7 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 	}
 
 	for _, el := range intesectionOfArrays(keys, availableHandlers) {
-		err = LoadHandler(el, messages, ll)
+		err = LoadHandler(el, messages, ll, conf)
 		if err != nil {
 			ll.Error("Couldn't load handlers from conf! |", "Error", err)
 			return err
@@ -32,7 +32,7 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 	return nil
 }
 
-func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger) error {
+func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger, conf Config) error {
 	pl, err := plugin.Open(fmt.Sprintf("../compiled_handlers/%s.so", name))
 	if err != nil {
 		return err
@@ -46,7 +46,8 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 
 	plEventHandlers := *plEventHandlersSymbol.(*handlers.Handler)
 
-	go plEventHandlers.HandleMessages(messages, ll)
+	params := conf.GetParams(name)
+	go plEventHandlers.HandleMessages(messages, ll, params)
 
 	return nil
 }
