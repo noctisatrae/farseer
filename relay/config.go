@@ -66,9 +66,9 @@ func (conf Config) GetHandlers() []string {
 func (conf Config) GetParams(handler string) map[string]interface{} {
 	// Check if the handler exists and has a "params" field
 	if handlerParams, ok := conf.Handlers[handler]; ok && handlerParams != nil {
-			if params, ok := handlerParams.(map[string]interface{})["params"].(map[string]interface{}); ok {
-					return params
-			}
+		if params, ok := handlerParams.(map[string]interface{})["params"].(map[string]interface{}); ok {
+			return params
+		}
 	}
 
 	// Return an empty map if the handler does not exist or does not have a "params" field
