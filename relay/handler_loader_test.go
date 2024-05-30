@@ -15,8 +15,11 @@ func TestIndividualLoader(t *testing.T) {
 
 	ll := *log.NewWithOptions(os.Stderr, log.Options{})
 
+	conf, err := Load("../config.toml")
+	assert.NoError(t, err)
+
 	messages := make(chan *protos.GossipMessage)
-	err := LoadHandler("rpc", messages, ll)
+	err = LoadHandler("rpc", messages, ll, conf)
 	assert.NoError(t, err)
 }
 
