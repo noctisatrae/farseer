@@ -17,7 +17,6 @@ type Handler struct {
 	// Here's a little example:
 	// func InitBehaviour(params map[string]interface{}) error {
 	// 	params["dbConn"] = conn.New()
-	//  params["counter"] += 1 // if it already exists from config.toml!
 	// 	return nil
 	// }
 	// Obviously, it's over-simplified without all the error handling & log reporting... I would also advise you to make a
