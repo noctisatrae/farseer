@@ -13,7 +13,7 @@ func TestLoadConfig(t *testing.T) {
 	conf, err := Load("../config.toml")
 	assert.NoError(t, err)
 
-	rpcConf := conf.Handlers["rpc"]
+	postgreConf := conf.Handlers["postgresql"]
 
 	// always-the-same option test
 	assert.Equal(t, HubParams{
@@ -25,7 +25,7 @@ func TestLoadConfig(t *testing.T) {
 	}, conf.Hub)
 
 	// dynamic conf
-	assert.Equal(t, true, rpcConf.(map[string]interface{})["Enabled"])
+	assert.Equal(t, true, postgreConf.(map[string]interface{})["Enabled"])
 }
 
 // can we get the params from a handler's configuration?
@@ -33,5 +33,5 @@ func TestParamsFromConf(t *testing.T) {
 	conf, err := Load("../config.toml")
 	assert.NoError(t, err)
 
-	assert.Equal(t, map[string]interface{}{"hello": "world"}, conf.GetParams("rpc"))
+	assert.Equal(t, map[string]interface{}{"password": "hello"}, conf.GetParams("postgresql"))
 }
