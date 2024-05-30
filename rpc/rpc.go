@@ -19,8 +19,7 @@ func CastRemoveHandler(data *protos.MessageData, params map[string]interface{}) 
 
 // Exported variable
 var PluginHandler = handler.Handler{
-	CastAddHandler:        CastAddHandler,
-	CastRemoveHandler:     CastRemoveHandler,
-	Params: 							 map[string]interface{}{"hello": true},
+	CastAddHandler:    CastAddHandler,
+	CastRemoveHandler: CastRemoveHandler,
 	// Initialize other handlers as needed...
 }
