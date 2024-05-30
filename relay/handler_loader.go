@@ -21,7 +21,10 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 		return err
 	}
 
+	ll.Debug("Available handlers! |", "Handlers", availableHandlers)
+
 	for _, el := range intesectionOfArrays(keys, availableHandlers) {
+		ll.Debug("Loading handlers! |", "Element", el)
 		err = LoadHandler(el, messages, ll, conf)
 		if err != nil {
 			ll.Error("Couldn't load handlers from conf! |", "Error", err)
@@ -37,6 +40,8 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 	if err != nil {
 		return err
 	}
+
+	ll.Debug("Opening shared lib! |", "Name", name, "Handlers", conf.GetHandlers())
 
 	plEventHandlersSymbol, err := pl.Lookup("PluginHandler")
 	if err != nil {
