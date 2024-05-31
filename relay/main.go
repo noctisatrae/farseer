@@ -10,6 +10,7 @@ import (
 	"time"
 
 	protos "farseer/protos"
+	"farseer/config"
 
 	"github.com/charmbracelet/log"
 
@@ -42,7 +43,7 @@ func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 }
 
 func main() {
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	if err != nil {
 		log.Error("Couldn't parse config file! |", "Error", err)
 	}

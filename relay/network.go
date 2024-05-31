@@ -7,6 +7,7 @@ import (
 	"time"
 
 	protos "farseer/protos"
+	"farseer/config"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"
@@ -61,7 +62,7 @@ func (netw *Network) Publish(m *protos.GossipMessage) error {
 	return err
 }
 
-func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, topicReq string, conf Config) (*Network, error) {
+func ReceiveMessages(ctx context.Context, ps *pubsub.PubSub, selfId peer.ID, topicReq string, conf config.Config) (*Network, error) {
 	req := fmt.Sprint("f_network_1_", topicReq)
 	log.Info("Suscribing to a new topic! |", "Topic", req)
 
