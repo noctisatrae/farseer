@@ -1,7 +1,9 @@
-package main
+package config_test
 
 import (
 	"testing"
+
+	config "farseer/config"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"
@@ -10,13 +12,13 @@ import (
 func TestLoadConfig(t *testing.T) {
 	log.SetLevel(log.DebugLevel)
 
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	postgreConf := conf.Handlers["postgresql"]
 
 	// always-the-same option test
-	assert.Equal(t, HubParams{
+	assert.Equal(t, config.HubParams{
 		GossipPort:      2282,
 		BootstrapPeers:  []string{"/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"},
 		Debug:           true,
@@ -30,7 +32,7 @@ func TestLoadConfig(t *testing.T) {
 
 // can we get the params from a handler's configuration?
 func TestParamsFromConf(t *testing.T) {
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	assert.Equal(t, map[string]interface{}{"DbAddress": "REDACTED"}, conf.GetParams("postgresql"))
