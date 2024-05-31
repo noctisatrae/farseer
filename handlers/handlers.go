@@ -49,7 +49,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 			switch data.Type {
 			case protos.MessageType_MESSAGE_TYPE_CAST_ADD:
 				if handler.CastAddHandler == nil {
-					ll.Info("New cast published! |", "Body", data.GetCastAddBody())
+					ll.Info("New cast published! |", "Body", data)
 				} else {
 					err := handler.CastAddHandler(data, params)
 					if err != nil {
@@ -58,7 +58,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_CAST_REMOVE:
 				if handler.CastRemoveHandler == nil {
-					ll.Info("Cast was just removed! |", "Body", data.GetCastRemoveBody())
+					ll.Info("Cast was just removed! |", "Body", data)
 				} else {
 					err := handler.CastRemoveHandler(data, params)
 					if err != nil {
@@ -67,7 +67,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_FRAME_ACTION:
 				if handler.FrameActionHandler == nil {
-					ll.Info("New frame interaction! |", "Action", data.GetFrameActionBody())
+					ll.Info("New frame interaction! |", "Action", data)
 				} else {
 					err := handler.FrameActionHandler(data, params)
 					if err != nil {
@@ -76,7 +76,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_REACTION_ADD:
 				if handler.ReactionAddHandler == nil {
-					ll.Info("New reaction added! |", "Reaction", data.GetReactionBody())
+					ll.Info("New reaction added! |", "Reaction", data)
 				} else {
 					err := handler.ReactionAddHandler(data, params)
 					if err != nil {
@@ -85,7 +85,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_REACTION_REMOVE:
 				if handler.ReactionRemoveHandler == nil {
-					ll.Info("A reaction was removed! |", "Reaction", data.GetReactionBody())
+					ll.Info("A reaction was removed! |", "Reaction", data)
 				} else {
 					err := handler.ReactionRemoveHandler(data, params)
 					if err != nil {
@@ -94,7 +94,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_LINK_ADD:
 				if handler.LinkAddHandler == nil {
-					ll.Info("A link was added! |", "Link", data.GetLinkBody())
+					ll.Info("A link was added! |", "Link", data)
 				} else {
 					err := handler.LinkAddHandler(data, params)
 					if err != nil {
@@ -103,7 +103,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_LINK_REMOVE:
 				if handler.LinkRemoveHandler == nil {
-					ll.Info("A link was removed! |", "Link", data.GetLinkBody())
+					ll.Info("A link was removed! |", "Link", data)
 				} else {
 					err := handler.LinkAddHandler(data, params)
 					if err != nil {
@@ -112,7 +112,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_VERIFICATION_ADD_ETH_ADDRESS:
 				if handler.VerificationAddHandler == nil {
-					ll.Info("A ETH address was just verified! |", "VerificationBody", data.GetVerificationAddAddressBody())
+					ll.Info("A ETH address was just verified! |", "VerificationBody", data)
 				} else {
 					err := handler.VerificationAddHandler(data, params)
 					if err != nil {
@@ -121,7 +121,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 				}
 			case protos.MessageType_MESSAGE_TYPE_VERIFICATION_REMOVE:
 				if handler.VerificationRemoveHandler == nil {
-					ll.Info("A ETH address was just removed! |", "VerificationBody", data.GetVerificationRemoveBody())
+					ll.Info("A ETH address was just removed! |", "VerificationBody", data)
 				} else {
 					err := handler.VerificationAddHandler(data, params)
 					if err != nil {
