@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	protos "farseer/protos"
 	"farseer/config"
+	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
 

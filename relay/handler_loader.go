@@ -6,8 +6,8 @@ import (
 	"plugin"
 	"strings"
 
-	"farseer/handlers"
 	"farseer/config"
+	"farseer/handlers"
 	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"

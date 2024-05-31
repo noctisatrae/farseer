@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	protos "farseer/protos"
 	"farseer/config"
+	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"
