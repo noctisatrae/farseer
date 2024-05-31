@@ -1,7 +1,7 @@
 [hub]
 GossipPort = 2282
 BootstrapPeers = [
-  "/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"
+  "/dns/lamia.farcaster.xyz/tcp/2283/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV"
 ]
 Debug = true
 BufferSize = 128
