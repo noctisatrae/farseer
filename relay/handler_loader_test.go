@@ -1,9 +1,11 @@
 package main
 
 import (
-	protos "farseer/protos"
 	"os"
 	"testing"
+
+	protos "farseer/protos"
+	"farseer/config"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"
@@ -15,7 +17,7 @@ func TestIndividualLoader(t *testing.T) {
 
 	ll := *log.NewWithOptions(os.Stderr, log.Options{})
 
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	messages := make(chan *protos.GossipMessage)
@@ -37,7 +39,7 @@ func TestListCompiledHandlers(t *testing.T) {
 func TestHandlersFromConf(t *testing.T) {
 	log.SetLevel(log.DebugLevel)
 
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	keyArr := conf.GetHandlers()
@@ -49,7 +51,7 @@ func TestHandlersFromConf(t *testing.T) {
 func TestWhatWillBeLoaded(t *testing.T) {
 	log.SetLevel(log.DebugLevel)
 
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	compiledHandlers, err := ListCompiledHandlers()
@@ -68,7 +70,7 @@ func TestMultipleLoader(t *testing.T) {
 
 	messages := make(chan *protos.GossipMessage)
 
-	conf, err := Load("../config.toml")
+	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
 	err = LoadHandlersFromConf(conf, messages, ll)

@@ -7,12 +7,13 @@ import (
 	"strings"
 
 	"farseer/handlers"
+	"farseer/config"
 	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
 )
 
-func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll log.Logger) error {
+func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessage, ll log.Logger) error {
 	keys := conf.GetHandlers()
 
 	availableHandlers, err := ListCompiledHandlers()
@@ -35,7 +36,7 @@ func LoadHandlersFromConf(conf Config, messages chan *protos.GossipMessage, ll l
 	return nil
 }
 
-func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger, conf Config) error {
+func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger, conf config.Config) error {
 	pl, err := plugin.Open(fmt.Sprintf("../compiled_handlers/%s.so", name))
 	if err != nil {
 		return err
