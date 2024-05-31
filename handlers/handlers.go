@@ -31,6 +31,8 @@ type Handler struct {
 	ReactionRemoveHandler HandlerBehaviour
 	LinkAddHandler        HandlerBehaviour
 	LinkRemoveHandler     HandlerBehaviour
+	VerificationAddHandler HandlerBehaviour
+	VerificationRemoveHandler HandlerBehaviour
 }
 
 func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll log.Logger, params map[string]interface{}) {
@@ -106,6 +108,24 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 					err := handler.LinkAddHandler(data, params)
 					if err != nil {
 						ll.Error("LinkRemove handler encountered an error! |", "Error", err)
+					}
+				}
+			case protos.MessageType_MESSAGE_TYPE_VERIFICATION_ADD_ETH_ADDRESS:
+				if handler.VerificationAddHandler == nil {
+					ll.Info("A ETH address was just verified! |", "VerificationBody", data.GetVerificationAddAddressBody())
+				} else {
+					err := handler.VerificationAddHandler(data, params)
+					if err != nil {
+						ll.Error("VerificationAdd handler encountered an error! |", "Error", err)
+					}
+				}
+			case protos.MessageType_MESSAGE_TYPE_VERIFICATION_REMOVE:
+				if handler.VerificationRemoveHandler == nil {
+					ll.Info("A ETH address was just removed! |", "VerificationBody", data.GetVerificationRemoveBody())
+				} else {
+					err := handler.VerificationAddHandler(data, params)
+					if err != nil {
+						ll.Error("VerificationRemove handler encountered an error! |", "Error", err)
 					}
 				}
 			default:
