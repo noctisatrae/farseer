@@ -9,4 +9,4 @@ ContactInterval = 30
 
 [handlers.postgresql]
 Enabled = true
-Params = { DbAddress = "REDACTED" }
+Params = { DbAddress = "postgres://postgres:example@localhost:5432/postgres" }
