@@ -25,5 +25,5 @@
 ## Hub stuff
 - [ ] Figure out which timestamp Farcaster uses?
 - [ ] gRPC API to write message & act more as real hub
-- [ ] Do we receive new messages from the network or sync messages?
+- [ ] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
