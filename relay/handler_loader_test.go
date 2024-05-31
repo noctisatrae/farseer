@@ -32,7 +32,7 @@ func TestListCompiledHandlers(t *testing.T) {
 	handlerList, err := ListCompiledHandlers()
 	assert.NoError(t, err)
 
-	assert.Equal(t, []string{"postgresql", "rpc"}, handlerList)
+	assert.Equal(t, []string{"postgresql"}, handlerList)
 }
 
 // What handlers do I get from conf?
