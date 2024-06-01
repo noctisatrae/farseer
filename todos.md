@@ -15,7 +15,7 @@
 - [ ] Simple cast filter/cast tracker (for example of use of the handler API)
 
 ## libp2p stuff
-- [ ] Do I need to regossip the messages? 
+- [X] Do I need to regossip the messages? => Answer from V: no
 
 ## PostgreSQL
 - [ ] Disable saving certain types of messages in the chat from `config.toml`
@@ -23,7 +23,7 @@
 - [ ] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
 
 ## Hub stuff
-- [ ] Figure out which timestamp Farcaster uses?
+- [X] Figure out which timestamp Farcaster uses? => farcaster time
 - [ ] gRPC API to write message & act more as real hub.
 - [ ] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
