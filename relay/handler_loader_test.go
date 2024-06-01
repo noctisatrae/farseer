@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"farseer/config"
-	"farseer/utils"
 	protos "farseer/protos"
+	"farseer/utils"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"
