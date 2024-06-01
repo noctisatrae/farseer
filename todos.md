@@ -3,7 +3,7 @@
 - [X] implement `TestListCompiledHandlers` to test `ListCompiledHandlers` (should list just the file names in `compiled_handlers`)
 - [X] implement  `TestMultipleLoader` to test `LoadHandlersFromConf` (should add some debugging to the function)
 - [X] enable plugins from `config.toml`
-- [ ] develop basic plugins! 
+- [X] develop basic plugins! 
 
 ## grafana
 - [ ] find a way to get metrics from memory & go
@@ -12,18 +12,21 @@
 ## plugin ideas
 - [ ] Find a way to make a `JS`/`TS` sdk!
 - [X] Sink to RedisDB/Dragonfly/NoSQL DB (sink to DB) => in process of doing it!
-- [ ] Simple cast filter/cast tracker (for example of use of the handler API)
+- [X] Simple cast filter/cast tracker (for example of use of the handler API)
 
 ## libp2p stuff
 - [X] Do I need to regossip the messages? => Answer from V: no
 
 ## PostgreSQL
-- [ ] Disable saving certain types of messages in the chat from `config.toml`
-- [ ] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
-- [ ] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
+- [ ] Be **SURE** message type & FID filtering works! 
+- [ ] Spend some time on data modelling (how to make it simple but efficient) & send a message to Alex for advices!
+- [ ] Implement other message types 
+- [X] Disable saving certain types of messages in the chat from `config.toml`
+- [X] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
+- [X] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
 
 ## Hub stuff
-- [X] Figure out which timestamp Farcaster uses? => farcaster time
-- [ ] gRPC API to write message & act more as real hub.
-- [ ] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
+- [X] Figure out which timestamp Farcaster uses? => farcaster time
+- [X] Do we receive new messages from the network or sync messages? => find out using timestamps
+- [ ] gRPC API to write message & act more as real hub.
