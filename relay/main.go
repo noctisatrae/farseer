@@ -27,6 +27,11 @@ import (
 	"github.com/multiformats/go-multiaddr-dns"
 )
 
+type ResolveResult struct {
+	ResolvedMultiaddrs []multiaddr.Multiaddr
+	Error              error
+}
+
 func checkConnectionStatus(h host.Host, peerID peer.ID) {
 	connected := h.Network().Connectedness(peerID)
 	if connected == network.Connected {
@@ -75,27 +80,46 @@ func main() {
 
 	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
 
-	initPeer, err := multiaddr.NewMultiaddr(conf.Hub.BootstrapPeers[0])
-	if err != nil {
-		log.Fatal("Couldn't parse multiaddr!", "Error", err)
-	}
+	resultsChan := make(chan ResolveResult)
 
-	resolvedMultiaddrs, err := dnsResolver.Resolve(ctx, initPeer)
-	if err != nil {
-		log.Fatal("Can't resolve from DNS addr", "Error", err)
-	}
-	peerAddrinfo, err := peer.AddrInfoFromP2pAddr(resolvedMultiaddrs[0])
-	if err != nil {
-		log.Fatal("Can't convert multiaddr to addrinfo", "Error", err)
-	}
+	for _, confPeer := range conf.Hub.BootstrapPeers {
+		go func(confPeer string) {
+			initPeer, err := multiaddr.NewMultiaddr(confPeer)
+			if err != nil {
+				resultsChan <- ResolveResult{Error: fmt.Errorf("couldn't parse multiaddr: %w", err)}
+				return
+			}
+		
+			resolvedMultiaddrs, err := dnsResolver.Resolve(ctx, initPeer)
+			if err != nil {
+				resultsChan <- ResolveResult{Error: fmt.Errorf("can't resolve from DNS addr: %w", err)}
+				return
+			}
+		
+			resultsChan <- ResolveResult{ResolvedMultiaddrs: resolvedMultiaddrs}
+		}(confPeer)
+	}	
 
-	log.Info("Connecting to a remote peer! |", "peer", peerAddrinfo)
-	err = h.Connect(ctx, *peerAddrinfo)
-	if err != nil {
-		log.Error("", "Error", err)
-	}
+	for i := 0; i < len(conf.Hub.BootstrapPeers); i++ {
+		result := <-resultsChan
+		if result.Error != nil {
+			log.Error("DNS resolution error", "Error", result.Error)
+			continue
+		}
+		
+		peerAddrinfo, err := peer.AddrInfoFromP2pAddr(result.ResolvedMultiaddrs[0])
+		if err != nil {
+			log.Fatal("Can't convert multiaddr to addrinfo", "Error", err)
+		}
+	
+		log.Info("Connecting to a remote peer! |", "peer", peerAddrinfo)
+		err = h.Connect(ctx, *peerAddrinfo)
+		if err != nil {
+			log.Error("", "Error", err)
+		}
 
-	checkConnectionStatus(h, peerAddrinfo.ID)
+		checkConnectionStatus(h, peerAddrinfo.ID)
+	}	
 
 	psParams := pubsub.DefaultGossipSubParams()
 	psParams.Dlo = 1
