@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"farseer/config"
+	"farseer/utils"
 	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
@@ -57,7 +58,7 @@ func TestWhatWillBeLoaded(t *testing.T) {
 	compiledHandlers, err := ListCompiledHandlers()
 	assert.NoError(t, err)
 
-	whatWillBeLoaded := intesectionOfArrays(conf.GetHandlers(), compiledHandlers)
+	whatWillBeLoaded := utils.IntersectionOfArrays(conf.GetHandlers(), compiledHandlers)
 
 	assert.Equal(t, []string{"postgresql"}, whatWillBeLoaded)
 }
