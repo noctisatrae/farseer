@@ -8,8 +8,8 @@ import (
 
 	"farseer/config"
 	"farseer/handlers"
-	"farseer/utils"
 	protos "farseer/protos"
+	"farseer/utils"
 
 	"github.com/charmbracelet/log"
 )
@@ -61,8 +61,6 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 
 	return nil
 }
-
-
 
 func ListCompiledHandlers() ([]string, error) {
 	plList := []string{}
