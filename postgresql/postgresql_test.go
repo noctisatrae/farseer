@@ -39,11 +39,11 @@ func TestParamsCheck(t *testing.T) {
 	assert.NoError(t, err)
 
 	msgData := protos.MessageData{
-		Type: protos.MessageType_MESSAGE_TYPE_CAST_ADD,
-		Fid: 2,
+		Type:      protos.MessageType_MESSAGE_TYPE_CAST_ADD,
+		Fid:       2,
 		Timestamp: uint32(currentFcTime),
-		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
-		Body: &protos.MessageData_CastAddBody{},
+		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body:      &protos.MessageData_CastAddBody{},
 	}
 
 	msgFilter := params["MessageTypesAllowed"]
