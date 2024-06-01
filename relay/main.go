@@ -89,16 +89,16 @@ func main() {
 				resultsChan <- ResolveResult{Error: fmt.Errorf("couldn't parse multiaddr: %w", err)}
 				return
 			}
-		
+
 			resolvedMultiaddrs, err := dnsResolver.Resolve(ctx, initPeer)
 			if err != nil {
 				resultsChan <- ResolveResult{Error: fmt.Errorf("can't resolve from DNS addr: %w", err)}
 				return
 			}
-		
+
 			resultsChan <- ResolveResult{ResolvedMultiaddrs: resolvedMultiaddrs}
 		}(confPeer)
-	}	
+	}
 
 	for i := 0; i < len(conf.Hub.BootstrapPeers); i++ {
 		result := <-resultsChan
@@ -106,12 +106,12 @@ func main() {
 			log.Error("DNS resolution error", "Error", result.Error)
 			continue
 		}
-		
+
 		peerAddrinfo, err := peer.AddrInfoFromP2pAddr(result.ResolvedMultiaddrs[0])
 		if err != nil {
 			log.Fatal("Can't convert multiaddr to addrinfo", "Error", err)
 		}
-	
+
 		log.Info("Connecting to a remote peer! |", "peer", peerAddrinfo)
 		err = h.Connect(ctx, *peerAddrinfo)
 		if err != nil {
@@ -119,7 +119,7 @@ func main() {
 		}
 
 		checkConnectionStatus(h, peerAddrinfo.ID)
-	}	
+	}
 
 	psParams := pubsub.DefaultGossipSubParams()
 	psParams.Dlo = 1
