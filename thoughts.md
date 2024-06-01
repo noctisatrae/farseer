@@ -1,4 +1,5 @@
 https://raw.githubusercontent.com/farcasterxyz/allowlist-mainnet/main/networkConfig.js
+
 This is the list of the peers accepted for Farcaster!
 
 - [X] Find already existing peers id for libp2p
