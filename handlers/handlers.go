@@ -23,15 +23,15 @@ type Handler struct {
 	// rough scheme of the look of your params map. Because it's an interface and not a strongly typed struct, it can lead to
 	// panicking if things aren't well queried.
 	// You also might want some checks to see if the info you need from the config are there!
-	InitHandler           InitBehaviour
-	CastAddHandler        HandlerBehaviour
-	CastRemoveHandler     HandlerBehaviour
-	FrameActionHandler    HandlerBehaviour
-	ReactionAddHandler    HandlerBehaviour
-	ReactionRemoveHandler HandlerBehaviour
-	LinkAddHandler        HandlerBehaviour
-	LinkRemoveHandler     HandlerBehaviour
-	VerificationAddHandler HandlerBehaviour
+	InitHandler               InitBehaviour
+	CastAddHandler            HandlerBehaviour
+	CastRemoveHandler         HandlerBehaviour
+	FrameActionHandler        HandlerBehaviour
+	ReactionAddHandler        HandlerBehaviour
+	ReactionRemoveHandler     HandlerBehaviour
+	LinkAddHandler            HandlerBehaviour
+	LinkRemoveHandler         HandlerBehaviour
+	VerificationAddHandler    HandlerBehaviour
 	VerificationRemoveHandler HandlerBehaviour
 }
 
