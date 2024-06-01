@@ -70,7 +70,7 @@ func (conf Config) GetParams(handler string) map[string]interface{} {
 	}
 
 	params := map[string]interface{}{}
-	for key, value := range handlerConfig.(map[string]interface{}){
+	for key, value := range handlerConfig.(map[string]interface{}) {
 		if key != "Enabled" {
 			params[key] = value
 		}
