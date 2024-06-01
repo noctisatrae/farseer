@@ -8,6 +8,7 @@ import (
 
 	"farseer/config"
 	"farseer/handlers"
+	"farseer/utils"
 	protos "farseer/protos"
 
 	"github.com/charmbracelet/log"
@@ -24,7 +25,7 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 
 	ll.Debug("Available handlers! |", "Handlers", availableHandlers)
 
-	for _, el := range intesectionOfArrays(keys, availableHandlers) {
+	for _, el := range utils.IntersectionOfArrays(keys, availableHandlers) {
 		ll.Debug("Loading handlers! |", "Element", el)
 		err = LoadHandler(el, messages, ll, conf)
 		if err != nil {
@@ -61,26 +62,7 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 	return nil
 }
 
-func intesectionOfArrays[T comparable](a []T, b []T) []T {
-	set := make([]T, 0)
 
-	for _, v := range a {
-		if containsGeneric(b, v) {
-			set = append(set, v)
-		}
-	}
-
-	return set
-}
-
-func containsGeneric[T comparable](b []T, e T) bool {
-	for _, v := range b {
-		if v == e {
-			return true
-		}
-	}
-	return false
-}
 
 func ListCompiledHandlers() ([]string, error) {
 	plList := []string{}
