@@ -121,13 +121,13 @@ func main() {
 		checkConnectionStatus(h, peerAddrinfo.ID)
 	}
 
-	psParams := pubsub.DefaultGossipSubParams()
-	psParams.Dlo = 1
-	log.Debug("GossipSub initial params! |", "Params", psParams)
+	// psParams := pubsub.DefaultGossipSubParams()
+	// psParams.Dlo = 1
+	// log.Debug("GossipSub initial params! |", "Params", psParams)
 
-	params := pubsub.WithGossipSubParams(psParams)
+	// params := pubsub.WithGossipSubParams(psParams)
 
-	ps, err := pubsub.NewGossipSub(ctx, h, params)
+	ps, err := pubsub.NewGossipSub(ctx, h)
 	if err != nil {
 		log.Error(err)
 	}
@@ -162,13 +162,13 @@ func main() {
 				Network:    2,
 				GossipAddress: &protos.GossipAddressInfo{
 					Family:  4, // to know if address ip4/ip6?
-					Address: "92.158.95.48",
+					Address: conf.Hub.PublicHubIp,
 					Port:    uint32(conf.Hub.GossipPort),
 				},
 				Body: &protos.ContactInfoContentBody{
 					GossipAddress: &protos.GossipAddressInfo{
 						Family:  4,
-						Address: "92.158.95.48",
+						Address: conf.Hub.PublicHubIp,
 						Port:    uint32(conf.Hub.GossipPort),
 					},
 					HubVersion: "2024.5.1",
