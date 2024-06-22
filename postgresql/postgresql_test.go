@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"farseer/config"
 	protos "farseer/protos"
@@ -8,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/charmbracelet/log"
+	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -40,7 +42,7 @@ func TestParamsCheck(t *testing.T) {
 
 	msgData := protos.MessageData{
 		Type:      protos.MessageType_MESSAGE_TYPE_CAST_ADD,
-		Fid:       2,
+		Fid:       10626,
 		Timestamp: uint32(currentFcTime),
 		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
 		Body:      &protos.MessageData_CastAddBody{},
@@ -49,9 +51,27 @@ func TestParamsCheck(t *testing.T) {
 	msgFilter := params["MessageTypesAllowed"]
 	log.Debug(msgFilter, "MsgType", msgData.Type.Number())
 
-	err = CheckConfigParams(&msgData, params, func(data *protos.MessageData, params map[string]interface{}) error {
+	err = CheckConfigParams(&msgData, params, []byte{}, func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
 		return errors.New("if this error is raised, the test pass")
 	})
 
 	assert.Error(t, err)
+}
+
+func TestCastRemoveHandler(t *testing.T) {
+	params := map[string]interface{}{
+		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
+	}
+	
+	err := InitBehaviour(params)
+	assert.NoError(t, err)
+
+	hdlCtx := params["hdlCtx"].(context.Context)
+	conn := params["dbConn"].(*pgx.Conn)
+
+	var id int
+	err = conn.QueryRow(hdlCtx, sqlCastUpdateRemoved, "0x2f57af0f1d0d58105fee9fc09c081dec72a0d32f").Scan(&id)
+	if err == pgx.ErrNoRows {
+		log.Debug("It works!", "Id", id)
+	}
 }
