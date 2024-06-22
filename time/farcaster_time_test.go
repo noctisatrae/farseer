@@ -24,5 +24,5 @@ func TestToFarcasterTime(t *testing.T) {
 	fTime, err := time.ToFarcasterTime(1717237682000)
 	assert.NoError(t, err)
 
-	assert.Equal(t, 107778482, fTime)
+	assert.Equal(t, int64(107778482), fTime)
 }
