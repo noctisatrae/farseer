@@ -6,6 +6,7 @@ import (
 )
 
 type HubParams struct {
+	PublicHubIp     string
 	GossipPort      uint
 	BootstrapPeers  []string
 	Debug           bool
