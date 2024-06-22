@@ -18,12 +18,13 @@
 - [X] Do I need to regossip the messages? => Answer from V: no
 
 ## PostgreSQL
-- [ ] Be **SURE** message type & FID filtering works! 
-- [ ] Spend some time on data modelling (how to make it simple but efficient) & send a message to Alex for advices!
-- [ ] Implement other message types 
+- [X] Be **SURE** message type & FID filtering works! 
+- [X] Spend some time on data modelling (how to make it simple but efficient) & send a message to Alex for advices!
+- [ ] Implement LINKS type message (for follows & unfollows)
 - [X] Disable saving certain types of messages in the chat from `config.toml`
 - [X] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
 - [X] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
+- [X] How to compute cast hashes so you can query them later? 
 
 ## Hub stuff
 - [ ] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
