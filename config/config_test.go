@@ -19,13 +19,12 @@ func TestLoadConfig(t *testing.T) {
 
 	// always-the-same option test
 	assert.Equal(t, config.HubParams{
+		PublicHubIp: "92.158.95.48",
 		GossipPort: 2282,
 		BootstrapPeers: []string{
-			"/ip4/5.189.129.220/tcp/2282/p2p/12D3KooWASKSaR6jiXSxbr1F4r9BzAh3csFXZkFHSwoCD9k7WSti",
-			"/ip4/5.161.126.48/tcp/2282/p2p/12D3KooWLuagvFHo6AWZ9cbQLsDmFNo8E3mJco7ixdu1CxTqjey1",
-			"/ip4/144.91.76.58/tcp/2282/p2p/12D3KooWBzjv7Lp37U3qTaEDbcDhfeSQdsPS5aH4iEi5b4gQd2UQ",
+			"/dns/nemes.farcaster.xyz/tcp/2283/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
 		},
-		Debug:           true,
+		Debug:           false,
 		BufferSize:      128,
 		ContactInterval: 30,
 	}, conf.Hub)
@@ -39,5 +38,5 @@ func TestParamsFromConf(t *testing.T) {
 	conf, err := config.Load("../config.toml")
 	assert.NoError(t, err)
 
-	assert.Equal(t, map[string]interface{}{"DbAddress": "postgres://postgres:example@localhost:5432/postgres", "MessageTypesAllowed": []interface{}{int64(1)}}, conf.GetParams("postgresql"))
+	assert.Equal(t, map[string]interface{}{"DbAddress": "postgres://postgres:example@localhost:5432/postgres", "MessageTypesAllowed": []interface{}{int64(1), int64(2)}, "FidsAllowed": []interface{}{int64(10626)}}, conf.GetParams("postgresql"))
 }
