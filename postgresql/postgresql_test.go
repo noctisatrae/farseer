@@ -62,7 +62,7 @@ func TestCastRemoveHandler(t *testing.T) {
 	params := map[string]interface{}{
 		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
 	}
-	
+
 	err := InitBehaviour(params)
 	assert.NoError(t, err)
 

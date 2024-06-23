@@ -13,6 +13,10 @@ import (
 )
 
 const (
+	sqlCastCheck = `
+	SELECT cast_add_text FROM all_messages WHERE hash = $1
+	`
+
 	sqlCastAdd = `
 	INSERT INTO all_messages (
 		fid, 
@@ -43,11 +47,11 @@ const (
 	`
 
 	sqlCastUpdateRemoved = `
-UPDATE all_messages
-SET 
-    removed_at = CURRENT_TIMESTAMP
-WHERE 
-    hash = $1;
+	UPDATE all_messages
+	SET 
+			removed_at = CURRENT_TIMESTAMP
+	WHERE 
+			hash = $1;
 	`
 )
 
@@ -116,23 +120,29 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	castAddBody := data.GetCastAddBody()
 	log.Debug("CastAddHandler, handling message", "Hash", utils.BytesToHex(hash))
 
-	_, err := conn.Exec(hdlCtx, sqlCastAdd,
-		data.Fid,
-		data.Timestamp,
-		data.Network.Number(),
-		data.Type.Number(),
-		utils.BytesToHex(hash),	
-		castAddBody.Text,
-		castAddBody.GetParentCastId().GetFid(),
-		utils.BytesToHex(castAddBody.GetParentCastId().GetHash()),
-		castAddBody.GetParentUrl(),
-		castAddBody.EmbedsDeprecated,
-		castAddBody.Mentions,
-		castAddBody.MentionsPositions,
-		castAddBody.Embeds,
-	)
-	if err != nil {
-		return err
+	hashStr := utils.BytesToHex(hash)
+
+	var id int
+	err := conn.QueryRow(hdlCtx, sqlCastCheck, hashStr).Scan(&id)
+	if err == pgx.ErrNoRows {
+		_, err := conn.Exec(hdlCtx, sqlCastAdd,
+			data.Fid,
+			data.Timestamp,
+			data.Network.Number(),
+			data.Type.Number(),
+			hashStr,
+			castAddBody.Text,
+			castAddBody.GetParentCastId().GetFid(),
+			utils.BytesToHex(castAddBody.GetParentCastId().GetHash()),
+			castAddBody.GetParentUrl(),
+			castAddBody.EmbedsDeprecated,
+			castAddBody.Mentions,
+			castAddBody.MentionsPositions,
+			castAddBody.Embeds,
+		)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -143,13 +153,13 @@ func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	conn := params["dbConn"].(*pgx.Conn)
 
 	var id int
-	castIdToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash) 
+	castIdToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash)
 
 	err := conn.QueryRow(hdlCtx, sqlCastUpdateRemoved, castIdToRemove).Scan(&id)
 	if err == pgx.ErrNoRows {
 		_, err := conn.Exec(
-			hdlCtx, 
-			sqlCastAddRemoved, 
+			hdlCtx,
+			sqlCastAddRemoved,
 			// args
 			data.Fid,
 			data.Timestamp,
@@ -161,7 +171,7 @@ func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 		if err != nil {
 			return err
 		}
-	} else {
+	} else if err != nil {
 		return err
 	}
 
