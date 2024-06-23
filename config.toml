@@ -3,14 +3,10 @@ PublicHubIp = "92.158.95.48"
 GossipPort = 2282
 BootstrapPeers = [
   # "/dns/lamia.farcaster.xyz/tcp/2283/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV",
-  "/dns/nemes.farcaster.xyz/tcp/2283/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
+  # "/dns/nemes.farcaster.xyz/tcp/2283/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
   # "/dns/hoyt.farcaster.xyz/tcp/2283/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
-  "/ip4/5.189.129.220/tcp/2282/p2p/12D3KooWASKSaR6jiXSxbr1F4r9BzAh3csFXZkFHSwoCD9k7WSti",
-  "/ip4/5.161.126.48/tcp/2282/p2p/12D3KooWLuagvFHo6AWZ9cbQLsDmFNo8E3mJco7ixdu1CxTqjey1",
-  "/ip4/144.91.76.58/tcp/2282/p2p/12D3KooWBzjv7Lp37U3qTaEDbcDhfeSQdsPS5aH4iEi5b4gQd2UQ",
-  "/ip4/173.212.254.57/tcp/2282/p2p/12D3KooWQYyXtrXJDuQ4tJaY6TkXRewatn3Uvz29W5xqX7PUYPgB"
 ]
-Debug = true
+Debug = false 
 BufferSize = 128
 ContactInterval = 30
 
