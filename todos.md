@@ -31,3 +31,4 @@
 - [X] Figure out which timestamp Farcaster uses? => farcaster time
 - [X] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] gRPC API to write message & act more as real hub.
+- [ ] save private key to file for persistent identity
