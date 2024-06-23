@@ -32,3 +32,8 @@
 - [X] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] gRPC API to write message & act more as real hub.
 - [ ] save private key to file for persistent identity
+
+## The project in itself
+- [ ] Branding & asserts for README.md
+- [ ] Choose a license that allows you to make a living out of this
+- [ ] Make pre-compiled binaries available in the release
