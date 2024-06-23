@@ -19,8 +19,8 @@ func TestLoadConfig(t *testing.T) {
 
 	// always-the-same option test
 	assert.Equal(t, config.HubParams{
-		GossipPort:      2282,
-		BootstrapPeers:  []string{
+		GossipPort: 2282,
+		BootstrapPeers: []string{
 			"/ip4/5.189.129.220/tcp/2282/p2p/12D3KooWASKSaR6jiXSxbr1F4r9BzAh3csFXZkFHSwoCD9k7WSti",
 			"/ip4/5.161.126.48/tcp/2282/p2p/12D3KooWLuagvFHo6AWZ9cbQLsDmFNo8E3mJco7ixdu1CxTqjey1",
 			"/ip4/144.91.76.58/tcp/2282/p2p/12D3KooWBzjv7Lp37U3qTaEDbcDhfeSQdsPS5aH4iEi5b4gQd2UQ",
