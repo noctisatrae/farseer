@@ -10,7 +10,6 @@ import (
 func TestInitParams(t *testing.T) {
 	// new handler
 	dummy := handlers.Handler{
-		Name: "Testing",
 		InitHandler: func(params map[string]interface{}) error {
 			params["hello"] = "world"
 			params["counter"] = 1
