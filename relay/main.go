@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -21,6 +22,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
 
 	"github.com/multiformats/go-multiaddr"
@@ -47,6 +49,39 @@ func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 	}
 }
 
+func getId() (crypto.PrivKey, error) {
+	if _, err := os.Stat("./hub_identity"); errors.Is(err, os.ErrNotExist) {
+		log.Debug("Privkey file do not exist, creating it!")
+		priv, _ , err := crypto.GenerateKeyPair(crypto.Ed25519, -1)
+		if err != nil {
+			return nil, err
+		}
+		privBytes, err := crypto.MarshalPrivateKey(priv)
+		if err != nil {
+			return nil, err
+		}
+
+		err = os.WriteFile("./hub_identity", privBytes, 0644)
+		if err != nil {
+			return nil, err
+		}
+
+		return priv, nil
+	} else {
+		privBytes, err := os.ReadFile("./hub_identity")
+		if err != nil {
+			return nil, err
+		}
+	
+		priv, err := crypto.UnmarshalPrivateKey(privBytes)
+		if err != nil {
+			return nil, err
+		}
+	
+		return priv, nil
+	}
+}
+
 func main() {
 	conf, err := config.Load("../config.toml")
 	if err != nil {
@@ -55,6 +90,7 @@ func main() {
 
 	if conf.Hub.Debug {
 		log.SetLevel(log.DebugLevel)
+		log.SetReportCaller(true)
 		log.Debug("Debugging mode enabled! Have fun :D")
 	}
 
@@ -66,7 +102,13 @@ func main() {
 	}
 	log.Info("Successfully started the DNS resolver!")
 
+	privKey, err := getId()
+	if err != nil {
+		log.Fatal("Couldn't get private key! | ", "Err", err)
+	}
+
 	h, err := libp2p.New(
+		libp2p.Identity(privKey),
 		libp2p.Ping(true),
 		libp2p.ListenAddrStrings(
 			fmt.Sprintf("/ip4/0.0.0.0/tcp/%s", strconv.FormatUint(uint64(conf.Hub.GossipPort), 10)),
