@@ -14,6 +14,13 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 ├── hub_identity <== SECRET private key of the hub
 ├── relay.binary <== what you'll run
 ```
+### Easy mode (Docker)
+1. Go into the root of the directory & start the container stack:
+```sh
+docker-compose up -d
+```
+This will start the hub with the default behavior & plug-ins.
+
 ### The DIY way
 1. Get the source from somewhere:
 ```sh
@@ -31,7 +38,13 @@ go build -buildmode=plugin -o ./compiled_handlers postgresql/postgresql.go
 ```
 There's a lot going here but essentially, we tell Go to build a plugin from the postgresql.go file output it in the `compiled_handlers` folder that will be read by the hub to exectute the custom logic.
 
-4. Now, you'll start from the default config to configure how you want the hub to operate:
+4. Now, you'll start the hub by running: 
+```sh
+./app
+```
+5. For fine-tuning the behavior of the hub, see the [configuration section](#configuration)
+
+## Configuration
 ```toml
 [hub]
 # How can other peers reach your hub!
