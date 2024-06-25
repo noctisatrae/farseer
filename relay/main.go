@@ -83,7 +83,7 @@ func getId() (crypto.PrivKey, error) {
 }
 
 func main() {
-	conf, err := config.Load("../config.toml")
+	conf, err := config.Load("config.toml")
 	if err != nil {
 		log.Error("Couldn't parse config file! |", "Error", err)
 	}

@@ -38,7 +38,7 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 }
 
 func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger, conf config.Config) error {
-	pl, err := plugin.Open(fmt.Sprintf("../compiled_handlers/%s.so", name))
+	pl, err := plugin.Open(fmt.Sprintf("compiled_handlers/%s.so", name))
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func LoadHandler(name string, messages chan *protos.GossipMessage, ll log.Logger
 func ListCompiledHandlers() ([]string, error) {
 	plList := []string{}
 
-	dirEntries, err := os.ReadDir("../compiled_handlers")
+	dirEntries, err := os.ReadDir("compiled_handlers")
 	if err != nil {
 		return []string{}, err
 	}
