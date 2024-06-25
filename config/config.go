@@ -28,7 +28,7 @@ func Load(path string) (Config, error) {
 			Hub: HubParams{
 				GossipPort:      2282,
 				BootstrapPeers:  []string{"/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"},
-				Debug:           false,
+				Debug:           true,
 				BufferSize:      128,
 				ContactInterval: 30,
 			},
@@ -41,7 +41,7 @@ func Load(path string) (Config, error) {
 			Hub: HubParams{
 				GossipPort:      2282,
 				BootstrapPeers:  []string{"/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"},
-				Debug:           false,
+				Debug:           true,
 				BufferSize:      128,
 				ContactInterval: 30,
 			},
