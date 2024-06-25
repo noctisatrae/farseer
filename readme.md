@@ -1,0 +1,2 @@
+# farseer - another kind of Farcaster hub
+farseer is a lightweight re-implementation of a Farcaster hub that's extensible through plugins (custom message handlers). In short, you can bring your own DB, logic & infrastructure.
