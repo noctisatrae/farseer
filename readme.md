@@ -8,7 +8,7 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 .
 ├── compiled_handlers <== where you'll put your compiled plugins
 │   └── postgresql.so 
-├── config.toml <== 
+├── config.toml <== configure the behaviour of the hubs & the plugin
 ├── docker-compose.yml <== infrastructure example
 ├── Dockerfile <== automatization of the process
 ├── hub_identity <== SECRET private key of the hub
