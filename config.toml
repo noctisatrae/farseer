@@ -2,17 +2,17 @@
 PublicHubIp = "92.158.95.48"
 GossipPort = 2282
 BootstrapPeers = [
-  # "/dns/lamia.farcaster.xyz/tcp/2283/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV",
-  # "/dns/nemes.farcaster.xyz/tcp/2283/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
+  # "/dns/lamia.farcaster.xyz/tcp/2282/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV",
+  "/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
   # "/dns/keats.farcaster.xyz/tcp/2282/p2p/12D3KooWBPXFPS656B76tCmbbX6PB4vunmQcd8F38MZjkR88ofBx",
-  # "/dns/hoyt.farcaster.xyz/tcp/2283/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
+  # "/dns/hoyt.farcaster.xyz/tcp/2282/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
 ]
 Debug = false
 BufferSize = 128
 ContactInterval = 30
 
 [handlers.postgresql]
-Enabled = true
+Enabled = false
 DbAddress = "postgres://postgres:example@db:5432/postgres"
 # refer to the enum l.60 in message.proto for the integer of msg types | here we only want to save the casts
 MessageTypesAllowed = [1, 2]
