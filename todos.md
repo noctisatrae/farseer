@@ -27,13 +27,14 @@
 - [X] How to compute cast hashes so you can query them later? 
 
 ## Hub stuff
-- [ ] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
+- [X] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
 - [X] Figure out which timestamp Farcaster uses? => farcaster time
 - [X] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [ ] gRPC API to write message & act more as real hub.
-- [ ] save private key to file for persistent identity
+- [X] save private key to file for persistent identity
+- [ ] Create a tool to generate the `hub_identity` file so you can get persistence inside the container
 
 ## The project in itself
 - [ ] Branding & asserts for README.md
-- [ ] Choose a license that allows you to make a living out of this
+- [X] Choose a license that allows you to make a living out of this
 - [ ] Make pre-compiled binaries available in the release
