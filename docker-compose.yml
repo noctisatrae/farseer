@@ -9,6 +9,7 @@ services:
       - 1.0.0.1
     volumes:
       - ./config.toml:/usr/src/app/config.toml
+      - ./hub_identity:/usr/src/app/hub_identity
     depends_on:
       db:
         condition: service_healthy
