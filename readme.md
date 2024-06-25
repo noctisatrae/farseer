@@ -15,6 +15,7 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 ├── relay.binary <== what you'll run
 ```
 ### Easy mode (Docker)
+[Compiling the plugins for Docker](#compiling-plugins-for-docker)
 1. Go into the root of the directory & start the container stack:
 ```sh
 docker-compose up -d
@@ -79,4 +80,25 @@ DbAddress = "postgres://postgres:example@db:5432/postgres"
 MessageTypesAllowed = [1, 2]
 # who are you tracking?
 FidsAllowed = [10626]
+```
+
+## Compiling plugins for Docker
+```docker
+FROM golang:1.22
+
+WORKDIR /usr/src/app
+
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+
+# 1. Make sure your plugin is included into the image
+COPY . .
+# RUN go build -buildmode=plugin -o ./compiled_handlers [your source code for the plugin] 
+# 2. Example for the postgresql plugin
+RUN go build -buildmode=plugin -o ./compiled_handlers postgresql/postgresql.go
+# Then, build the hub itself
+RUN go build -v -o /usr/local/bin/app ./relay
+
+CMD ["app"]
 ```
