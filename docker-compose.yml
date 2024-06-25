@@ -2,8 +2,16 @@ services:
   farseer:
     image: farseer
     restart: always
+    ports:
+      - 2282
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
     volumes:
-      - config.toml:/usr/app/config.toml
+      - ./config.toml:/usr/src/app/config.toml
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres
     restart: always
@@ -17,6 +25,11 @@ services:
     #    target: /dev/shm
     #    tmpfs:
     #      size: 134217728 # 128*2^20 bytes = 128Mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_PASSWORD: example
   adminer:
