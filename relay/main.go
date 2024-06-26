@@ -19,10 +19,10 @@ import (
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-mplex"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
+	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
-	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/libp2p/go-libp2p/p2p/security/noise"
 
 	"github.com/multiformats/go-multiaddr"
@@ -52,7 +52,7 @@ func logMessages(messages chan *protos.GossipMessage, ll log.Logger) {
 func getId() (crypto.PrivKey, error) {
 	if _, err := os.Stat("./hub_identity"); errors.Is(err, os.ErrNotExist) {
 		log.Debug("Privkey file do not exist, creating it!")
-		priv, _ , err := crypto.GenerateKeyPair(crypto.Ed25519, -1)
+		priv, _, err := crypto.GenerateKeyPair(crypto.Ed25519, -1)
 		if err != nil {
 			return nil, err
 		}
@@ -72,12 +72,12 @@ func getId() (crypto.PrivKey, error) {
 		if err != nil {
 			return nil, err
 		}
-	
+
 		priv, err := crypto.UnmarshalPrivateKey(privBytes)
 		if err != nil {
 			return nil, err
 		}
-	
+
 		return priv, nil
 	}
 }
