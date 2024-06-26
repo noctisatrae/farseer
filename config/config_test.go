@@ -20,7 +20,7 @@ func TestLoadConfig(t *testing.T) {
 	// always-the-same option test
 	assert.Equal(t, config.HubParams{
 		PublicHubIp: "92.158.95.48",
-		GossipPort: 2282,
+		GossipPort:  2282,
 		BootstrapPeers: []string{
 			"/dns/nemes.farcaster.xyz/tcp/2283/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
 		},
