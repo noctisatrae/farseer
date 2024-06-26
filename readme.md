@@ -18,7 +18,7 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 [Compiling the plugins for Docker](#compiling-plugins-for-docker)
 1. Go into the root of the directory & start the container stack:
 ```sh
-docker-compose up -d
+docker build -t farseer && docker-compose up -d
 ```
 This will start the hub with the default behavior & plug-ins.
 
