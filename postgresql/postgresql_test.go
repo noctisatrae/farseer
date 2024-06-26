@@ -70,7 +70,9 @@ func TestCastRemoveHandler(t *testing.T) {
 	conn := params["dbConn"].(*pgx.Conn)
 
 	var id int
-	err = conn.QueryRow(hdlCtx, sqlCastUpdateRemoved, "0x2f57af0f1d0d58105fee9fc09c081dec72a0d32f").Scan(&id)
+	deleteTime, err := time.GetFarcasterTime()
+	assert.NoError(t, err)
+	err = conn.QueryRow(hdlCtx, UpdateCastOnRemove, deleteTime, "0x2f57af0f1d0d58105fee9fc09c081dec72a0d32f").Scan(&id)
 	if err == pgx.ErrNoRows {
 		log.Debug("It works!", "Id", id)
 	}
