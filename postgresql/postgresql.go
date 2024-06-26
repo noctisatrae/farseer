@@ -12,49 +12,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const (
-	sqlCastCheck = `
-	SELECT cast_add_text FROM all_messages WHERE hash = $1
-	`
-
-	sqlCastAdd = `
-	INSERT INTO all_messages (
-		fid, 
-		timestamp, 
-		network, 
-		type,
-		hash,
-		cast_add_text,
-		cast_add_parent_cast_id_fid, 
-		cast_add_parent_cast_id_hash, 
-		cast_add_parent_url, 
-		cast_add_embeds_deprecated, 
-		cast_add_mentions, 
-		cast_add_mentions_positions, 
-		cast_add_embeds
-	) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-	`
-
-	sqlCastAddRemoved = `
-	INSERT INTO all_messages (
-		fid, 
-		timestamp,
-		network,
-		type,
-		hash,
-		removed_at
-	) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
-	`
-
-	sqlCastUpdateRemoved = `
-	UPDATE all_messages
-	SET 
-			removed_at = CURRENT_TIMESTAMP
-	WHERE 
-			hash = $1;
-	`
-)
-
 func CheckConfigParams(data *protos.MessageData, params map[string]interface{}, hash []byte, handlerFunc handler.HandlerBehaviour) error {
 	msgFilter := params["MessageTypesAllowed"]
 	fidFilter := params["FidsAllowed"]
@@ -117,28 +74,46 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	hdlCtx := params["hdlCtx"].(context.Context)
 	conn := params["dbConn"].(*pgx.Conn)
 
-	castAddBody := data.GetCastAddBody()
-	log.Debug("CastAddHandler, handling message", "Hash", utils.BytesToHex(hash))
-
 	hashStr := utils.BytesToHex(hash)
 
+	castAddBody := data.GetCastAddBody()
+	log.Debug("CastAddHandler, handling message", "Hash", hashStr)
+
+	_, err := conn.Exec(hdlCtx, CastAdd,
+		data.Fid,
+		data.Timestamp,
+
+		hashStr,
+		utils.BytesToHex(castAddBody.GetParentCastId().Hash),
+		castAddBody.GetParentCastId().Fid,
+		castAddBody.GetParentUrl(),
+		
+		castAddBody.Text,
+		castAddBody.Embeds,
+		castAddBody.MentionsPositions,
+	)
+
+	return err
+}
+
+func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+	hdlCtx := params["hdlCtx"].(context.Context)
+	conn := params["dbConn"].(*pgx.Conn)
+
 	var id int
-	err := conn.QueryRow(hdlCtx, sqlCastCheck, hashStr).Scan(&id)
+	castHashToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash)
+
+	err := conn.QueryRow(hdlCtx, UpdateCastOnRemove, data.Timestamp, castHashToRemove).Scan(&id)
 	if err == pgx.ErrNoRows {
-		_, err := conn.Exec(hdlCtx, sqlCastAdd,
+		_, err := conn.Exec(
+			hdlCtx,
+			CastAddRemoved,
 			data.Fid,
-			data.Timestamp,
-			data.Network.Number(),
-			data.Type.Number(),
-			hashStr,
-			castAddBody.Text,
-			castAddBody.GetParentCastId().GetFid(),
-			utils.BytesToHex(castAddBody.GetParentCastId().GetHash()),
-			castAddBody.GetParentUrl(),
-			castAddBody.EmbedsDeprecated,
-			castAddBody.Mentions,
-			castAddBody.MentionsPositions,
-			castAddBody.Embeds,
+
+			data.Timestamp, // timestamp
+			data.Timestamp, // deleted_at
+
+			castHashToRemove,
 		)
 		if err != nil {
 			return err
@@ -148,34 +123,52 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	return nil
 }
 
-func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+func LinkAddHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
 	hdlCtx := params["hdlCtx"].(context.Context)
 	conn := params["dbConn"].(*pgx.Conn)
 
-	var id int
-	castIdToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash)
+	LinkHash := utils.BytesToHex(hash)
 
-	err := conn.QueryRow(hdlCtx, sqlCastUpdateRemoved, castIdToRemove).Scan(&id)
-	if err == pgx.ErrNoRows {
-		_, err := conn.Exec(
-			hdlCtx,
-			sqlCastAddRemoved,
-			// args
-			data.Fid,
-			data.Timestamp,
-			data.Network.Number(),
-			data.Type.Number(),
-			castIdToRemove,
-			data.Timestamp,
-		)
-		if err != nil {
-			return err
-		}
-	} else if err != nil {
-		return err
-	}
+	LinkAddBody := data.GetLinkBody()
+	_, err := conn.Exec(hdlCtx, LinkAdd, 
+		data.Timestamp,
+		
+		data.Fid,
+		LinkAddBody.Target,
+		LinkHash,
+		LinkAddBody.Type,
+	)
+	
+	return err
+}
 
-	return nil
+func LinkRemoveHandler(data *protos.MessageData, hash [] byte, params map[string]interface{}) error {
+	hdlCtx := params["hdlCtx"].(context.Context)
+	conn := params["dbConn"].(*pgx.Conn)
+
+	LinkRemoveBody := data.GetLinkBody()
+	
+	// TODO: Link check before remove query
+	_, err := conn.Exec(hdlCtx, LinkRemove, data.Timestamp, LinkRemoveBody.Target)
+
+	return err
+}
+
+func ReactionAddHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+	hdlCtx := params["hdlCtx"].(context.Context)
+	conn := params["dbConn"].(*pgx.Conn)
+
+	ReactionAddBody := data.GetReactionBody()
+	_, err := conn.Exec(hdlCtx, ReactionAdd, 
+		data.Fid, 
+		data.Timestamp, 
+		ReactionAddBody.Type, 
+		utils.BytesToHex(hash),
+		ReactionAddBody.GetTargetCastId().GetFid(),
+		ReactionAddBody.GetTargetUrl(),
+	)
+
+	return err
 }
 
 // Exported variable
@@ -187,5 +180,14 @@ var PluginHandler = handler.Handler{
 	},
 	CastRemoveHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
 		return CheckConfigParams(data, params, hash, CastRemoveHandler)
+	},
+	LinkAddHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+		return CheckConfigParams(data, params, hash, LinkAddHandler)
+	},
+	LinkRemoveHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+		return CheckConfigParams(data, params, hash, LinkRemoveHandler)
+	},
+	ReactionAddHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+		return CheckConfigParams(data, params, hash, ReactionAddHandler)
 	},
 }
