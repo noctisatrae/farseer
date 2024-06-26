@@ -83,7 +83,8 @@ FidsAllowed = [10626]
 ```
 
 ## Compiling plugins for Docker
-```dockerfile
+You can edit the project's Dockerfile to add your plugin build command! 
+```diff
 FROM golang:1.22
 
 WORKDIR /usr/src/app
@@ -94,7 +95,7 @@ RUN go mod download && go mod verify
 
 # 1. Make sure your plugin is included into the image
 COPY . .
-# RUN go build -buildmode=plugin -o ./compiled_handlers [your source code for the plugin] 
++ # RUN go build -buildmode=plugin -o ./compiled_handlers [your source code for the plugin] 
 # 2. Example for the postgresql plugin
 RUN go build -buildmode=plugin -o ./compiled_handlers postgresql/postgresql.go
 # Then, build the hub itself
