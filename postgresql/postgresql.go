@@ -87,7 +87,7 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 		utils.BytesToHex(castAddBody.GetParentCastId().Hash),
 		castAddBody.GetParentCastId().Fid,
 		castAddBody.GetParentUrl(),
-		
+
 		castAddBody.Text,
 		castAddBody.Embeds,
 		castAddBody.MentionsPositions,
@@ -130,24 +130,24 @@ func LinkAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	LinkHash := utils.BytesToHex(hash)
 
 	LinkAddBody := data.GetLinkBody()
-	_, err := conn.Exec(hdlCtx, LinkAdd, 
+	_, err := conn.Exec(hdlCtx, LinkAdd,
 		data.Timestamp,
-		
+
 		data.Fid,
 		LinkAddBody.Target,
 		LinkHash,
 		LinkAddBody.Type,
 	)
-	
+
 	return err
 }
 
-func LinkRemoveHandler(data *protos.MessageData, hash [] byte, params map[string]interface{}) error {
+func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
 	hdlCtx := params["hdlCtx"].(context.Context)
 	conn := params["dbConn"].(*pgx.Conn)
 
 	LinkRemoveBody := data.GetLinkBody()
-	
+
 	// TODO: Link check before remove query
 	_, err := conn.Exec(hdlCtx, LinkRemove, data.Timestamp, LinkRemoveBody.Target)
 
@@ -159,10 +159,10 @@ func ReactionAddHandler(data *protos.MessageData, hash []byte, params map[string
 	conn := params["dbConn"].(*pgx.Conn)
 
 	ReactionAddBody := data.GetReactionBody()
-	_, err := conn.Exec(hdlCtx, ReactionAdd, 
-		data.Fid, 
-		data.Timestamp, 
-		ReactionAddBody.Type, 
+	_, err := conn.Exec(hdlCtx, ReactionAdd,
+		data.Fid,
+		data.Timestamp,
+		ReactionAddBody.Type,
 		utils.BytesToHex(hash),
 		ReactionAddBody.GetTargetCastId().GetFid(),
 		ReactionAddBody.GetTargetUrl(),
