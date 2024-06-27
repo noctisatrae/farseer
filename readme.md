@@ -77,6 +77,7 @@ Enabled = true
 # The options below are determined to by the developer of the plugin. They manage how the arguments are parsed and used!
 DbAddress = "postgres://postgres:example@db:5432/postgres"
 # refer to the enum l.60 in message.proto for the integer of msg types | here we only want to save the casts & deletions
+# delete a filter to not use it!
 MessageTypesAllowed = [1, 2]
 # who are you tracking?
 FidsAllowed = [10626]
