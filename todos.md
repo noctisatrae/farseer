@@ -37,4 +37,9 @@
 ## The project in itself
 - [ ] Branding & asserts for README.md
 - [X] Choose a license that allows you to make a living out of this
-- [ ] Make pre-compiled binaries available in the release
+- [X] Make pre-compiled binaries available in the release
+
+## CI/CD & Automatic release
+- [ ] Write a `Makefile` to automatically build the binaries, compress them and release to GitHub
+- [ ] Create a Github job to build for different platforms (Mac/Windows)
+- [ ] Write documentation so people can extend the jobs & `Makefile` to build customs plug-ins
