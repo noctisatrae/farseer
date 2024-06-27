@@ -200,7 +200,7 @@ func main() {
 		for {
 			<-ticker.C
 			netwContact.PublishContactInfo(&protos.ContactInfoContent{
-				HubVersion: "2024.5.1",
+				HubVersion: "2024.6.12",
 				Network:    2,
 				GossipAddress: &protos.GossipAddressInfo{
 					Family:  4, // to know if address ip4/ip6?
@@ -213,7 +213,7 @@ func main() {
 						Address: conf.Hub.PublicHubIp,
 						Port:    uint32(conf.Hub.GossipPort),
 					},
-					HubVersion: "2024.5.1",
+					HubVersion: "2024.6.12",
 					Network:    2,
 					Timestamp:  uint64(time.Now().Unix()),
 					AppVersion: "1.0",
