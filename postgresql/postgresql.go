@@ -234,7 +234,7 @@ func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 
 			castHashToRemove,
 		)
-		return err 
+		return err
 	}
 
 	return err
@@ -272,8 +272,8 @@ func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 		return err
 	}
 	if cmdTag.RowsAffected() == 0 {
-		_, err = conn.Exec(hdlCtx, LinkAddRemoved, 
-			data.Timestamp, 
+		_, err = conn.Exec(hdlCtx, LinkAddRemoved,
+			data.Timestamp,
 			data.Fid,
 			LinkRemoveBody.GetTargetFid(),
 			LinkHash,
@@ -283,7 +283,7 @@ func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 			return err
 		}
 	}
-	
+
 	return nil
 }
 

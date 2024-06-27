@@ -68,16 +68,16 @@ func TestCastAddHandler(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = CastAddHandler(&protos.MessageData{
-		Type: protos.MessageType_MESSAGE_TYPE_CAST_ADD,
-		Fid: 10126,
+		Type:      protos.MessageType_MESSAGE_TYPE_CAST_ADD,
+		Fid:       10126,
 		Timestamp: uint32(fcTime),
-		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
 		Body: &protos.MessageData_CastAddBody{
 			CastAddBody: &protos.CastAddBody{
 				Text: "Hello",
 				Parent: &protos.CastAddBody_ParentCastId{
 					ParentCastId: &protos.CastId{
-						Fid: 10246,
+						Fid:  10246,
 						Hash: []byte{2, 3, 4, 5},
 					},
 				},
@@ -99,10 +99,10 @@ func TestCastRemoveHandler(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = CastRemoveHandler(&protos.MessageData{
-		Type: protos.MessageType_MESSAGE_TYPE_CAST_REMOVE,
-		Fid: 10126,
+		Type:      protos.MessageType_MESSAGE_TYPE_CAST_REMOVE,
+		Fid:       10126,
 		Timestamp: uint32(fcTime),
-		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
 		Body: &protos.MessageData_CastRemoveBody{
 			CastRemoveBody: &protos.CastRemoveBody{
 				TargetHash: []byte{3, 4, 5, 6},
@@ -125,10 +125,10 @@ func TestLinkAdd(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = LinkAddHandler(&protos.MessageData{
-		Type: protos.MessageType_MESSAGE_TYPE_LINK_ADD,
-		Fid: 10126,
+		Type:      protos.MessageType_MESSAGE_TYPE_LINK_ADD,
+		Fid:       10126,
 		Timestamp: uint32(fcTime),
-		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
 		Body: &protos.MessageData_LinkBody{
 			LinkBody: &protos.LinkBody{
 				Type: "follow",
@@ -153,10 +153,10 @@ func TestLinkRemove(t *testing.T) {
 	assert.NoError(t, err)
 
 	err = LinkRemoveHandler(&protos.MessageData{
-		Type: protos.MessageType_MESSAGE_TYPE_LINK_REMOVE,
-		Fid: 10126,
+		Type:      protos.MessageType_MESSAGE_TYPE_LINK_REMOVE,
+		Fid:       10126,
 		Timestamp: uint32(fcTime),
-		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Network:   protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
 		Body: &protos.MessageData_LinkBody{
 			LinkBody: &protos.LinkBody{
 				Type: "follow",
