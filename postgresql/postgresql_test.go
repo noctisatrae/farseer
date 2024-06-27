@@ -169,3 +169,66 @@ func TestLinkRemove(t *testing.T) {
 
 	assert.NoError(t, err)
 }
+
+func TestReactionAdd(t *testing.T) { 
+	params := map[string]interface{}{
+		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
+	}
+
+	err := InitBehaviour(params)
+	assert.NoError(t, err)
+
+	fcTime, err := FcTime.GetFarcasterTime()
+	assert.NoError(t, err)
+
+	reactionTestData := &protos.MessageData{
+		Type: protos.MessageType(protos.ReactionType_REACTION_TYPE_LIKE),
+		Fid: 10267,
+		Timestamp: uint32(fcTime),
+		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body: &protos.MessageData_ReactionBody{
+			ReactionBody: &protos.ReactionBody{
+				Type: protos.ReactionType_REACTION_TYPE_RECAST,
+				Target: &protos.ReactionBody_TargetCastId{
+					TargetCastId: &protos.CastId{
+						Fid: 10423,
+						Hash: []byte{1, 2, 3, 4, 5, 6},
+					},
+				},
+			},
+		},
+	}
+	err = ReactionAddHandler(reactionTestData, []byte{5, 6, 7}, params)
+	assert.NoError(t, err)
+}
+
+func TestReactionRemove(t *testing.T) { 
+	params := map[string]interface{}{
+		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
+	}
+
+	err := InitBehaviour(params)
+	assert.NoError(t, err)
+
+	fcTime, err := FcTime.GetFarcasterTime()
+	assert.NoError(t, err)
+
+	err = ReactionRemoveHandler(&protos.MessageData{
+		Type: protos.MessageType_MESSAGE_TYPE_REACTION_REMOVE,
+		Fid: 10267,
+		Timestamp: uint32(fcTime),
+		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body: &protos.MessageData_ReactionBody{
+			ReactionBody: &protos.ReactionBody{
+				Type: protos.ReactionType_REACTION_TYPE_RECAST,
+				Target: &protos.ReactionBody_TargetCastId{
+					TargetCastId: &protos.CastId{
+						Fid: 10423,
+						Hash: []byte{1, 2, 3, 4, 5, 6},
+					},
+				},
+			},
+		},
+	}, []byte{0, 1, 0, 1}, params)
+	assert.NoError(t, err)
+}

@@ -90,6 +90,7 @@ const (
 		target_fid = $1
 	`
 
+	// Add a new reaction to the DB
 	ReactionAdd = `
 	INSERT INTO reactions (
 		fid,
@@ -102,6 +103,30 @@ const (
 		target_fid,
 		target_url
 	) VALUES ($1, $2, $3, $4, $5, $6, $7)
+	`
+
+	ReactionAddRemoved = `
+	INSERT INTO reactions (
+		fid,
+
+		timestamp,
+		deleted_at,
+		
+		reaction_type,
+		hash,
+		target_hash,
+		target_fid,
+		target_url
+	) VALUES ($1, $2, CURRENT_TIMESTAMP, $3, $4, $5, $6, $7)
+	`
+
+	ReactionRemove = `
+	UPDATE reactions
+	SET
+		deleted_at = CURRENT_TIMESTAMP,
+		updated_at = CURRENT_TIMESTAMP
+	WHERE
+		target_hash = $1
 	`
 
 	VerificationAdd = `
@@ -224,7 +249,9 @@ func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	castHashToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash)
 
 	cmdTag, err := conn.Exec(hdlCtx, UpdateCastOnRemove, castHashToRemove)
-	if cmdTag.RowsAffected() == 0 {
+	if err != nil {
+		return err
+	} else if cmdTag.RowsAffected() == 0 {
 		_, err = conn.Exec(
 			hdlCtx,
 			CastAddRemoved,
@@ -270,8 +297,7 @@ func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	cmdTag, err := conn.Exec(hdlCtx, LinkRemove, LinkRemoveBody.GetTargetFid())
 	if err != nil {
 		return err
-	}
-	if cmdTag.RowsAffected() == 0 {
+	} else if cmdTag.RowsAffected() == 0 {
 		_, err = conn.Exec(hdlCtx, LinkAddRemoved,
 			data.Timestamp,
 			data.Fid,
@@ -297,11 +323,40 @@ func ReactionAddHandler(data *protos.MessageData, hash []byte, params map[string
 		data.Timestamp,
 		ReactionAddBody.Type,
 		utils.BytesToHex(hash),
+		utils.BytesToHex(ReactionAddBody.GetTargetCastId().Hash),
 		ReactionAddBody.GetTargetCastId().GetFid(),
 		ReactionAddBody.GetTargetUrl(),
 	)
 
 	return err
+}
+
+func ReactionRemoveHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+	hdlCtx := params["hdlCtx"].(context.Context)
+	conn := params["dbConn"].(*pgx.Conn)
+
+	ReactionRemoveBody := data.GetReactionBody()
+	cmdTag, err := conn.Exec(hdlCtx, ReactionRemove,
+		utils.BytesToHex(ReactionRemoveBody.GetTargetCastId().GetHash()),
+	)
+	if err != nil {
+		return err
+	} else if cmdTag.RowsAffected() == 0 {
+		_, err := conn.Exec(hdlCtx, ReactionAddRemoved,
+			data.Fid,
+			data.Timestamp,
+			ReactionRemoveBody.Type,
+			utils.BytesToHex(hash),
+			utils.BytesToHex(ReactionRemoveBody.GetTargetCastId().GetHash()),
+			ReactionRemoveBody.GetTargetCastId().Fid,
+			ReactionRemoveBody.GetTargetUrl(),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // Exported variable
@@ -322,5 +377,8 @@ var PluginHandler = handler.Handler{
 	},
 	ReactionAddHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
 		return CheckConfigParams(data, params, hash, ReactionAddHandler)
+	},
+	ReactionRemoveHandler: func(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
+		return CheckConfigParams(data, params, hash, ReactionRemoveHandler)
 	},
 }
