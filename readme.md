@@ -35,7 +35,7 @@ go build -v -o app ./relay
 
 3. Compile your plugins/custom handlers using the *plugin mode* of `go build` (here we'll compile the example `postgresql` plugin):
 ```sh
-go build -buildmode=plugin -o ./compiled_handlers postgresql/postgresql.go
+go build -buildmode=plugin -o ./compiled_handlers/postgresql.so postgresql/postgresql.go
 ```
 There's a lot going here but essentially, we tell Go to build a plugin from the postgresql.go file output it in the `compiled_handlers` folder that will be read by the hub to exectute the custom logic.
 
