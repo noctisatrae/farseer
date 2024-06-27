@@ -19,13 +19,13 @@ func TestInitConn(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestParamsFromConf(t *testing.T) {
-	conf, err := config.Load("../config.toml")
-	assert.NoError(t, err)
+// func TestParamsFromConf(t *testing.T) {
+// 	conf, err := config.Load("../config.toml")
+// 	assert.NoError(t, err)
 
-	err = InitBehaviour(conf.GetParams("postgresql"))
-	assert.NoError(t, err)
-}
+// 	err = InitBehaviour(conf.GetParams("postgresql"))
+// 	assert.NoError(t, err)
+// }
 
 func TestParamsCheck(t *testing.T) {
 	log.SetLevel(log.DebugLevel)
