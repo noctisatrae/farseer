@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"farseer/config"
 	protos "farseer/protos"
@@ -9,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/charmbracelet/log"
-	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -80,12 +78,12 @@ func TestCastAddHandler(t *testing.T) {
 				Parent: &protos.CastAddBody_ParentCastId{
 					ParentCastId: &protos.CastId{
 						Fid: 10246,
-						Hash: []byte{},
+						Hash: []byte{2, 3, 4, 5},
 					},
 				},
 			},
 		},
-	}, []byte{}, params)
+	}, []byte{3, 4, 5, 6}, params)
 	assert.NoError(t, err)
 }
 
@@ -97,9 +95,20 @@ func TestCastRemoveHandler(t *testing.T) {
 	err := InitBehaviour(params)
 	assert.NoError(t, err)
 
-	hdlCtx := params["hdlCtx"].(context.Context)
-	conn := params["dbConn"].(*pgx.Conn)
+	fcTime, err := FcTime.GetFarcasterTime()
+	assert.NoError(t, err)
 
-	_, err = conn.Exec(hdlCtx, UpdateCastOnRemove, 2233434445, "")
+	err = CastRemoveHandler(&protos.MessageData{
+		Type: protos.MessageType_MESSAGE_TYPE_CAST_REMOVE,
+		Fid: 10126,
+		Timestamp: uint32(fcTime),
+		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body: &protos.MessageData_CastRemoveBody{
+			CastRemoveBody: &protos.CastRemoveBody{
+				TargetHash: []byte{3, 4, 5, 6},
+			},
+		},
+	}, []byte{}, params)
+
 	assert.NoError(t, err)
 }

@@ -44,17 +44,17 @@ const (
 		deleted_at,
 
 		hash
-	) VALUES ($1, $2, $3, $4)
+	) VALUES ($1, $2, CURRENT_TIMESTAMP, $3)
 	`
 
 	// A query that updates a cast when it's removed
 	UpdateCastOnRemove = `
 	UPDATE casts
 	SET
-		deleted_at = $1,
+		deleted_at = CURRENT_TIMESTAMP,
 		updated_at = CURRENT_TIMESTAMP
 	WHERE
-		hash = $2
+		hash = $1
 	`
 
 	// A query to add a link into the database
@@ -72,10 +72,10 @@ const (
 	LinkRemove = `
 	UPDATE links
 	SET
-		deleted_at = $1,
+		deleted_at = CURRENT_TIMESTAMP,
 		updated_at = CURRENT_TIMESTAMP
 	WHERE
-		target_fid = $2
+		target_fid = $1
 	`
 
 	ReactionAdd = `
@@ -108,6 +108,16 @@ const (
 	) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	`
 )
+
+// // data.Timestamp => standard timestamp => to SQL compatible timestamp
+// func fcTimeToSqlTime(fcTimestamp uint32) (time.Time, error) {
+// 	normalTimestamp, err := fctime.FromFarcasterTime(int64(fcTimestamp))
+// 	if err != nil {
+// 		return time.Time{}, err
+// 	}
+// 	timestamp := time.Unix(normalTimestamp, 0)
+// 	return timestamp, nil
+// }
 
 func CheckConfigParams(data *protos.MessageData, params map[string]interface{}, hash []byte, handlerFunc handler.HandlerBehaviour) error {
 	msgFilter := params["MessageTypesAllowed"]
@@ -199,27 +209,23 @@ func CastRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	hdlCtx := params["hdlCtx"].(context.Context)
 	conn := params["dbConn"].(*pgx.Conn)
 
-	var id int
 	castHashToRemove := utils.BytesToHex(data.GetCastRemoveBody().TargetHash)
 
-	err := conn.QueryRow(hdlCtx, UpdateCastOnRemove, data.Timestamp, castHashToRemove).Scan(&id)
-	if err == pgx.ErrNoRows {
-		_, err := conn.Exec(
+	cmdTag, err := conn.Exec(hdlCtx, UpdateCastOnRemove, castHashToRemove)
+	if cmdTag.RowsAffected() == 0 {
+		_, err = conn.Exec(
 			hdlCtx,
 			CastAddRemoved,
 			data.Fid,
 
 			data.Timestamp, // timestamp
-			data.Timestamp, // deleted_at
 
 			castHashToRemove,
 		)
-		if err != nil {
-			return err
-		}
+		return err 
 	}
 
-	return nil
+	return err
 }
 
 func LinkAddHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
