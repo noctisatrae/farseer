@@ -7,7 +7,7 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -buildmode=plugin -o ./compiled_handlers postgresql/postgresql.go
+RUN go build -buildmode=plugin -o ./compiled_handlers/postgresql.so postgresql/postgresql.go
 RUN go build -v -o /usr/local/bin/app ./relay
 
 CMD ["app"]
