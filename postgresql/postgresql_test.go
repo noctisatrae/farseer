@@ -112,3 +112,60 @@ func TestCastRemoveHandler(t *testing.T) {
 
 	assert.NoError(t, err)
 }
+
+func TestLinkAdd(t *testing.T) {
+	params := map[string]interface{}{
+		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
+	}
+
+	err := InitBehaviour(params)
+	assert.NoError(t, err)
+
+	fcTime, err := FcTime.GetFarcasterTime()
+	assert.NoError(t, err)
+
+	err = LinkAddHandler(&protos.MessageData{
+		Type: protos.MessageType_MESSAGE_TYPE_LINK_ADD,
+		Fid: 10126,
+		Timestamp: uint32(fcTime),
+		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body: &protos.MessageData_LinkBody{
+			LinkBody: &protos.LinkBody{
+				Type: "follow",
+				Target: &protos.LinkBody_TargetFid{
+					TargetFid: 10222,
+				},
+			},
+		},
+	}, []byte{2, 3, 4, 5, 6}, params)
+	assert.NoError(t, err)
+}
+
+func TestLinkRemove(t *testing.T) {
+	params := map[string]interface{}{
+		"DbAddress": "postgres://postgres:example@localhost:5432/postgres",
+	}
+
+	err := InitBehaviour(params)
+	assert.NoError(t, err)
+
+	fcTime, err := FcTime.GetFarcasterTime()
+	assert.NoError(t, err)
+
+	err = LinkRemoveHandler(&protos.MessageData{
+		Type: protos.MessageType_MESSAGE_TYPE_LINK_REMOVE,
+		Fid: 10126,
+		Timestamp: uint32(fcTime),
+		Network: protos.FarcasterNetwork_FARCASTER_NETWORK_MAINNET,
+		Body: &protos.MessageData_LinkBody{
+			LinkBody: &protos.LinkBody{
+				Type: "follow",
+				Target: &protos.LinkBody_TargetFid{
+					TargetFid: uint64(10222),
+				},
+			},
+		},
+	}, []byte{2, 3, 4, 5, 6}, params)
+
+	assert.NoError(t, err)
+}

@@ -69,6 +69,18 @@ const (
 	) VALUES ($1, $2, $3, $4, $5)
 	`
 
+	LinkAddRemoved = `
+	INSERT INTO links (
+		timestamp,
+		deleted_at,
+
+		fid,
+		target_fid,
+		hash,
+		type
+	) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4, $5)
+	`
+
 	LinkRemove = `
 	UPDATE links
 	SET
@@ -239,7 +251,7 @@ func LinkAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 		data.Timestamp,
 
 		data.Fid,
-		LinkAddBody.Target,
+		LinkAddBody.GetTargetFid(),
 		LinkHash,
 		LinkAddBody.Type,
 	)
@@ -252,11 +264,27 @@ func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	conn := params["dbConn"].(*pgx.Conn)
 
 	LinkRemoveBody := data.GetLinkBody()
+	LinkHash := utils.BytesToHex(hash)
 
 	// TODO: Link check before remove query
-	_, err := conn.Exec(hdlCtx, LinkRemove, data.Timestamp, LinkRemoveBody.Target)
-
-	return err
+	cmdTag, err := conn.Exec(hdlCtx, LinkRemove, LinkRemoveBody.GetTargetFid())
+	if err != nil {
+		return err
+	}
+	if cmdTag.RowsAffected() == 0 {
+		_, err = conn.Exec(hdlCtx, LinkAddRemoved, 
+			data.Timestamp, 
+			data.Fid,
+			LinkRemoveBody.GetTargetFid(),
+			LinkHash,
+			LinkRemoveBody.Type,
+		)
+		if err != nil {
+			return err
+		}
+	}
+	
+	return nil
 }
 
 func ReactionAddHandler(data *protos.MessageData, hash []byte, params map[string]interface{}) error {
