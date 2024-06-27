@@ -15,5 +15,4 @@ ContactInterval = 30
 Enabled = true
 DbAddress = "postgres://postgres:example@db:5432/postgres"
 # refer to the enum l.60 in message.proto for the integer of msg types | here we only want to save the casts
-MessageTypesAllowed = []
 FidsAllowed = [10626]
