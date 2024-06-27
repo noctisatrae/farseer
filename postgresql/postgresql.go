@@ -51,7 +51,7 @@ const (
 	UpdateCastOnRemove = `
 	UPDATE casts
 	SET
-		deleted_at = $1
+		deleted_at = $1,
 		updated_at = CURRENT_TIMESTAMP
 	WHERE
 		hash = $2
@@ -72,7 +72,7 @@ const (
 	LinkRemove = `
 	UPDATE links
 	SET
-		deleted_at = $1
+		deleted_at = $1,
 		updated_at = CURRENT_TIMESTAMP
 	WHERE
 		target_fid = $2
@@ -181,12 +181,14 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 		data.Timestamp,
 
 		hashStr,
+		// todo: nil check
 		utils.BytesToHex(castAddBody.GetParentCastId().Hash),
 		castAddBody.GetParentCastId().Fid,
 		castAddBody.GetParentUrl(),
 
 		castAddBody.Text,
 		castAddBody.Embeds,
+		castAddBody.Mentions,
 		castAddBody.MentionsPositions,
 	)
 
