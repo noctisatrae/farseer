@@ -10,7 +10,7 @@
 - [ ] how to integrate/launch the server (should just provide the json for the dashboard?)
 
 ## plugin ideas
-- [ ] Find a way to make a `JS`/`TS` sdk!
+- [X] Find a way to make a `JS`/`TS` sdk! => gRPC
 - [X] Sink to RedisDB/Dragonfly/NoSQL DB (sink to DB) => in process of doing it!
 - [X] Simple cast filter/cast tracker (for example of use of the handler API)
 
@@ -20,7 +20,7 @@
 ## PostgreSQL
 - [X] Be **SURE** message type & FID filtering works! 
 - [X] Spend some time on data modelling (how to make it simple but efficient) & send a message to Alex for advices!
-- [ ] Implement LINKS type message (for follows & unfollows)
+- [X] Implement LINKS type message (for follows & unfollows)
 - [X] Disable saving certain types of messages in the chat from `config.toml`
 - [X] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
 - [X] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
