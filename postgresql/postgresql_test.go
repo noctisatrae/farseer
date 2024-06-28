@@ -75,12 +75,6 @@ func TestCastAddHandler(t *testing.T) {
 		Body: &protos.MessageData_CastAddBody{
 			CastAddBody: &protos.CastAddBody{
 				Text: "Hello",
-				Parent: &protos.CastAddBody_ParentCastId{
-					ParentCastId: &protos.CastId{
-						Fid:  10246,
-						Hash: []byte{2, 3, 4, 5},
-					},
-				},
 			},
 		},
 	}, []byte{3, 4, 5, 6}, params)
