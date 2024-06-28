@@ -5,6 +5,9 @@ import (
 )
 
 func BytesToHex(bytes []byte) string {
+	if bytes == nil {
+		return ""
+	}
 	hexString := hex.EncodeToString(bytes)
 	if hexString == "" {
 		return ""
