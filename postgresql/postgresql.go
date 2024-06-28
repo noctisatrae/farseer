@@ -223,15 +223,24 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	castAddBody := data.GetCastAddBody()
 	log.Debug("CastAddHandler, handling message", "Hash", hashStr)
 
+	var parentHash []byte = []byte{}
+	var parentFid uint64
+	var parentUrl string = ""
+	if castAddBody.GetParent() != nil {
+		parentHash = castAddBody.GetParentCastId().Hash
+		parentFid = castAddBody.GetParentCastId().Fid
+		parentUrl = castAddBody.GetParentUrl()
+	}
+
 	_, err := conn.Exec(hdlCtx, CastAdd,
 		data.Fid,
 		data.Timestamp,
 
 		hashStr,
 		// todo: nil check
-		utils.BytesToHex(castAddBody.GetParentCastId().Hash),
-		castAddBody.GetParentCastId().Fid,
-		castAddBody.GetParentUrl(),
+		utils.BytesToHex(parentHash),
+		parentFid,
+		parentUrl,
 
 		castAddBody.Text,
 		castAddBody.Embeds,
