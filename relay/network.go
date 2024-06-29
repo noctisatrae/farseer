@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"farseer/config"
-	"farseer/time"
 	protos "farseer/protos"
+	"farseer/time"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"
