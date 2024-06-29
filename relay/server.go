@@ -17,18 +17,17 @@ import (
 
 const PORT = 2285
 
-
 type hubRPCServer struct {
 	// utils
 	netw Network
-	ll log.Logger
+	ll   log.Logger
 
 	protos.UnimplementedHubServiceServer
 	rpcServer map[string][]*protos.HubServiceServer
 }
 
-func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Message) (*protos.Message, error) {	
-	peerIdEncoded, err := s.netw.self.Marshal() 
+func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Message) (*protos.Message, error) {
+	peerIdEncoded, err := s.netw.self.Marshal()
 	if err != nil {
 		return &protos.Message{}, err
 	}
@@ -43,15 +42,15 @@ func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Messag
 		Content: &protos.GossipMessage_Message{
 			Message: message,
 		},
-		Topics: []string{s.netw.topic.String()},
-		PeerId: peerIdEncoded,
-		Version: protos.GossipVersion_GOSSIP_VERSION_V1_1,
+		Topics:    []string{s.netw.topic.String()},
+		PeerId:    peerIdEncoded,
+		Version:   protos.GossipVersion_GOSSIP_VERSION_V1_1,
 		Timestamp: uint32(contactInfoTime),
 	}
 
 	s.netw.Publish(&msg)
 
-	return message, nil 
+	return message, nil
 }
 
 func (s *hubRPCServer) ValidateMessage(ctx context.Context, message *protos.Message) (*protos.ValidationResponse, error) {
@@ -60,8 +59,8 @@ func (s *hubRPCServer) ValidateMessage(ctx context.Context, message *protos.Mess
 
 func newServer(netw Network, ll log.Logger) *hubRPCServer {
 	s := &hubRPCServer{
-		netw: netw,
-		ll: ll,
+		netw:      netw,
+		ll:        ll,
 		rpcServer: make(map[string][]*protos.HubServiceServer),
 	}
 	return s
@@ -87,10 +86,10 @@ func Start(wg *sync.WaitGroup, stopCh <-chan struct{}, netw Network) {
 	go func() {
 		if err := grpcServer.Serve(lis); err != nil {
 			ll.Fatal("Failed to serve:", err)
-		}	
+		}
 	}()
 
-	<- stopCh
+	<-stopCh
 
 	grpcServer.GracefulStop()
 	ll.Info("Graceful shutdown was successful!")
