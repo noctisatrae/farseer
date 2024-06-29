@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "message.proto";
+
+message ValidationResponse {
+  bool valid = 1;
+  Message message = 2;
+}
