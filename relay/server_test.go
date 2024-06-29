@@ -1,9 +1,11 @@
 package main
 
 import (
+
 	"sync"
 	"testing"
-	// "time"
+	
+	"time"
 )
 
 func TestGracefulShutdown(t *testing.T) {
@@ -12,11 +14,11 @@ func TestGracefulShutdown(t *testing.T) {
 
 	// Start the gRPC server in a separate goroutine
 	wg.Add(1)
-	go Start(&wg, stopCh)
+	go Start(&wg, stopCh, Network{})
 
-	// time.Sleep(time.Second)
+	time.Sleep(time.Second)
 
-	// close(stopCh)
+	close(stopCh)
 
 	// Wait for the server to stop
 	wg.Wait()
