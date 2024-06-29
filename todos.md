@@ -25,6 +25,7 @@
 - [X] Ask around to see what kind of data modeling would be suitable to Hub messages in the DB
 - [X] Check out Shuttle/Neynar: one big table with IDs to differenciate the messages from one another
 - [X] How to compute cast hashes so you can query them later? 
+- [ ] Implement `VerificationAdd` for the message
 
 ## Hub stuff
 - [X] Absolute path for `config.toml`. If relay is executed in a folder, search the config from the context of execution.
