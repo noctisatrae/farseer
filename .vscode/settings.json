@@ -1,7 +1,8 @@
 {
   "protoc": {
     "options": [
-      "-I=protos"
+      "-I=protos",
+      "--go_out=protos"
     ]
   }
 }
