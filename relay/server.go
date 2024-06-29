@@ -1,4 +1,4 @@
-package grpc
+package main
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/charmbracelet/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const PORT = 2285
@@ -52,9 +53,10 @@ func Start(wg *sync.WaitGroup, stopCh <-chan struct{}) {
 
 	grpcServer := grpc.NewServer(grpc.EmptyServerOption{})
 	protos.RegisterHubServiceServer(grpcServer, newServer())
+	reflection.Register(grpcServer)
 	go func() {
 		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatal("Failed to serve:", err)
+			ll.Fatal("Failed to serve:", err)
 		}	
 	}()
 

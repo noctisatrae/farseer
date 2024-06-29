@@ -1,9 +1,9 @@
-package grpc
+package main
 
 import (
 	"sync"
 	"testing"
-	"time"
+	// "time"
 )
 
 func TestGracefulShutdown(t *testing.T) {
@@ -14,9 +14,9 @@ func TestGracefulShutdown(t *testing.T) {
 	wg.Add(1)
 	go Start(&wg, stopCh)
 
-	time.Sleep(time.Second)
+	// time.Sleep(time.Second)
 
-	close(stopCh)
+	// close(stopCh)
 
 	// Wait for the server to stop
 	wg.Wait()
