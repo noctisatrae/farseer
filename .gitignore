@@ -2,3 +2,4 @@ relay/relay
 */*.so
 hub_identity
 backups/
+hubs_saved.txt
