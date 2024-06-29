@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"time"
 
 	"farseer/config"
+	"farseer/time"
 	protos "farseer/protos"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
@@ -35,11 +35,17 @@ func (netw *Network) PublishContactInfo(contact *protos.ContactInfoContent) {
 		peerIdEncoded = []byte{}
 	}
 
+	contactInfoTime, err := time.GetFarcasterTime()
+	if err != nil {
+		contactInfoTime = 0
+		netw.logger.Error("Couldn't get Farcaster time for the message!")
+	}
+
 	m := protos.GossipMessage{
 		Topics:    []string{netw.topic.String()},
 		PeerId:    peerIdEncoded,
 		Version:   protos.GossipVersion_GOSSIP_VERSION_V1_1,
-		Timestamp: uint32(time.Now().Unix()),
+		Timestamp: uint32(contactInfoTime),
 		Content: &protos.GossipMessage_ContactInfoContent{
 			ContactInfoContent: contact,
 		},
