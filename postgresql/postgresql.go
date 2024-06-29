@@ -226,7 +226,7 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 	var parentHash []byte = []byte{}
 	var parentFid uint64
 	var parentUrl string = ""
-	if castAddBody.GetParent() != nil {
+	if castAddBody.GetParentCastId() != nil {
 		parentHash = castAddBody.GetParentCastId().Hash
 		parentFid = castAddBody.GetParentCastId().Fid
 		parentUrl = castAddBody.GetParentUrl()
