@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const PORT = 2285
+const PORT = 2283
 
 type hubRPCServer struct {
 	// utils
@@ -78,7 +78,7 @@ func Start(wg *sync.WaitGroup, stopCh <-chan struct{}, netw Network) {
 		ll.Fatal("Can't start the listnener! |", "Err", err)
 	}
 
-	ll.Info("Started the server!")
+	ll.Info("Started the GRPC server! |", "Port", PORT)
 
 	grpcServer := grpc.NewServer(grpc.EmptyServerOption{})
 	protos.RegisterHubServiceServer(grpcServer, newServer(netw, *ll))
