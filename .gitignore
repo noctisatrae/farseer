@@ -6,3 +6,4 @@ hubs_saved.txt
 rpc.pb.go
 node_modules/
 bun.lockb
+.env
