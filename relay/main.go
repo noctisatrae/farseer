@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"sync"
 	"syscall"
 	"time"
 
@@ -189,10 +190,19 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// START THE RPC SERVER
+	var wg sync.WaitGroup
+	stopCh := make(chan struct{})
+
+	wg.Add(1)
+	go Start(&wg, stopCh, *netwPrimary)
+
+	// HANDLE THE MESSAGES
 	LoadHandlersFromConf(conf, netwPrimary.NetworkMessage, netwPrimary.logger)
 	go HandleContactInfo(netwContact.NetworkMessage, netwContact.logger, h, ctx)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
+	// SEND CONTACT_INFO
 	go func() {
 		ticker := time.NewTicker(time.Duration(conf.Hub.ContactInterval) * time.Second)
 		defer ticker.Stop()
@@ -234,8 +244,12 @@ func main() {
 	<-ch
 	log.Info("Received signal, shutting down...")
 
+	close(stopCh)
+
 	// shut the node down
 	if err := h.Close(); err != nil {
 		log.Fatal(err.Error())
 	}
+
+	wg.Wait()
 }
