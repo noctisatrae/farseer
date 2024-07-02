@@ -9,6 +9,7 @@ import (
 
 	protos "farseer/protos"
 	"farseer/time"
+	"farseer/utils"
 
 	"github.com/charmbracelet/log"
 	"google.golang.org/grpc"
@@ -31,6 +32,18 @@ func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Messag
 	if err != nil {
 		return &protos.Message{}, err
 	}
+
+	msgUnixTime, err := time.FromFarcasterTime(int64(message.Data.Timestamp))
+	if err != nil {
+		log.Error("Couldn't convert FC time to unix time |", "Error", err)
+	}
+	log.Debug("Received a message from gRPC! |", 
+		"Text", message.Data.GetCastAddBody().Text, 
+		"Hash", utils.BytesToHex(message.Hash),
+		"Signer", utils.BytesToHex(message.Signer),
+		"Signature", utils.BytesToHex(message.Signature),
+		"Timestamp", msgUnixTime,
+	)
 
 	contactInfoTime, err := time.GetFarcasterTime()
 	if err != nil {
