@@ -39,6 +39,7 @@
 - [ ] `config.toml` to set options of the server
 - [ ] implement getCurrentPeers endpoint
 - [ ] TLS auth for getSecureSSLClient()
+- [ ] implement GetInfo gRPC method to tell other hubs we're synced
 
 ## The project in itself
 - [ ] Branding & asserts for README.md
