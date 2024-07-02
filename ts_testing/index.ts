@@ -1,15 +1,14 @@
-import { CastType, FarcasterNetwork, NobleEd25519Signer, getInsecureHubRpcClient, makeCastAdd } from "@farcaster/hub-nodejs";
-import { mnemonicToAccount, signMessage } from "viem/accounts";
+import { CastType, EthersEip712Signer, FarcasterNetwork, NobleEd25519Signer, getFarcasterTime, getInsecureHubRpcClient, makeCastAdd } from "@farcaster/hub-nodejs";
+import { Wallet } from "ethers";
 
-const HUB_URL = "localhost:2283" 
+const HUB_URL = "38.242.131.38:2283" 
 const MNEMONIC = Bun.env.MNEMONIC ?? ""
 const NETWORK = FarcasterNetwork.MAINNET
 const FID = 10626
 
-const account = mnemonicToAccount(MNEMONIC)
+const wallet = Wallet.fromPhrase(MNEMONIC)
+const signer = new EthersEip712Signer(wallet)
 const clt = getInsecureHubRpcClient(HUB_URL);
-const privateKey = account.getHdKey().privateKey ?? new Uint8Array()
-const signer = new NobleEd25519Signer(privateKey)
 
 const castToSend = await makeCastAdd(
   {
@@ -21,10 +20,12 @@ const castToSend = await makeCastAdd(
     type: CastType.CAST
   },
   {
+    timestamp: getFarcasterTime()._unsafeUnwrap(),
     fid: FID,
     network: NETWORK
   },
   signer
 )
 
-clt.submitMessage(castToSend._unsafeUnwrap())
+const res = await clt.submitMessage(castToSend._unsafeUnwrap())
+console.debug(res.isOk() ? 'Submission was successful!' : `Request failed! Reason=${res.error}`)
