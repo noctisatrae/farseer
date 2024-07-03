@@ -37,7 +37,7 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd identity
-        go build -o ../gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../release/gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile relay
@@ -46,7 +46,7 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd relay
-        go build -o ../relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../release/relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile postgresql plugin
@@ -56,14 +56,12 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd postgresql
-        go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
+        go build -buildmode=plugin -o ../release/compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
         cd ..
 
     - name: Create release package
       run: |
-        mkdir -p release/compiled_handlers
-        mv compiled_handlers/* release/compiled_handlers/
-        tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release
+        tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release .
 
     - name: Upload Release Asset
       uses: softprops/action-gh-release@v1
