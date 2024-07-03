@@ -63,7 +63,7 @@ jobs:
       run: |
         mkdir -p release/compiled_handlers
         mv compiled_handlers/* release/compiled_handlers/
-        tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release compiled_handlers
+        tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release
 
     - name: Upload Release Asset
       uses: softprops/action-gh-release@v1
