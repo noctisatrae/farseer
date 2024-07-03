@@ -6,10 +6,10 @@ import (
 	"plugin"
 	"strings"
 
-	"farseer/config"
-	"farseer/handlers"
-	protos "farseer/protos"
-	"farseer/utils"
+	protos "github.com/noctisatrae/farseer/protos"
+	"github.com/noctisatrae/farseer/config"
+	"github.com/noctisatrae/farseer/handlers"
+	"github.com/noctisatrae/farseer/utils"
 
 	"github.com/charmbracelet/log"
 )

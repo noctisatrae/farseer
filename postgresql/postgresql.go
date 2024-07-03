@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	handler "farseer/handlers"
-	protos "farseer/protos"
-	utils "farseer/utils"
+	handler "github.com/noctisatrae/farseer/handlers"
+	protos "github.com/noctisatrae/farseer/protos"
+	utils "github.com/noctisatrae/farseer/utils"
 
 	"github.com/charmbracelet/log"
 	"github.com/jackc/pgx/v5"

@@ -1,9 +1,9 @@
 package handlers_test
 
 import (
-	"farseer/handlers"
 	"testing"
 
+	"github.com/noctisatrae/farseer/handlers"
 	"github.com/stretchr/testify/assert"
 )
 

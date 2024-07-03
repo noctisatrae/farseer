@@ -7,10 +7,10 @@ import (
 	"os"
 	"sync"
 
-	"farseer/config"
-	protos "farseer/protos"
-	"farseer/time"
-	"farseer/utils"
+	protos "github.com/noctisatrae/farseer/protos"
+	"github.com/noctisatrae/farseer/config"
+	"github.com/noctisatrae/farseer/time"
+	"github.com/noctisatrae/farseer/utils"
 
 	"github.com/charmbracelet/log"
 	"google.golang.org/grpc"

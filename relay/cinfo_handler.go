@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	protos "farseer/protos"
+	protos "github.com/noctisatrae/farseer/protos"
 
 	"github.com/charmbracelet/log"
 	"github.com/libp2p/go-libp2p/core/host"

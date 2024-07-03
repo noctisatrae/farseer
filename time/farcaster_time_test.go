@@ -3,7 +3,7 @@ package time_test
 import (
 	"testing"
 
-	"farseer/time"
+	"github.com/noctisatrae/farseer/time"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"

@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"farseer/config"
+	"github.com/noctisatrae/farseer/config"
 
 	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"

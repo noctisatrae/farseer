@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	protos "farseer/protos"
-
+	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/charmbracelet/log"
 )
 

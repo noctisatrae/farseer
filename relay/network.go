@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"farseer/config"
-	protos "farseer/protos"
-	"farseer/time"
+	protos "github.com/noctisatrae/farseer/protos"
+	"github.com/noctisatrae/farseer/config"
+	"github.com/noctisatrae/farseer/time"
 
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p/core/peer"

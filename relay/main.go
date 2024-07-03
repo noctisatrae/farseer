@@ -11,8 +11,8 @@ import (
 	"syscall"
 	"time"
 
-	"farseer/config"
-	protos "farseer/protos"
+	protos "github.com/noctisatrae/farseer/protos"
+	"github.com/noctisatrae/farseer/config"
 
 	"github.com/charmbracelet/log"
 

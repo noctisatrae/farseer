@@ -1,6 +1,6 @@
 package utils
 
-import protos "farseer/protos"
+import protos "github.com/noctisatrae/farseer/protos"
 
 func MsgTypeToInt(msgType protos.MessageType) int64 {
 	return int64(msgType.Number())
