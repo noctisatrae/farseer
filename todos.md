@@ -33,7 +33,7 @@
 - [X] Do we receive new messages from the network or sync messages? => find out using timestamps
 - [X] gRPC API to write message & act more as real hub.
 - [X] save private key to file for persistent identity
-- [ ] Create a tool to generate the `hub_identity` file so you can get persistence inside the container
+- [X] Create a tool to generate the `hub_identity` file so you can get persistence inside the container
 
 ## gRPC
 - [ ] `config.toml` to set options of the server
