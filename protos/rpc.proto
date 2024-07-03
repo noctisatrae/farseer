@@ -2,9 +2,7 @@ syntax = "proto3";
 option go_package = ".";
 
 import "message.proto";
-import "request_response.proto";
 
 service HubService {
   rpc SubmitMessage(Message) returns (Message);
-  rpc ValidateMessage(Message) returns (ValidationResponse);
 }
