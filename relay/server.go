@@ -65,10 +65,6 @@ func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Messag
 	return message, nil
 }
 
-func (s *hubRPCServer) ValidateMessage(ctx context.Context, message *protos.Message) (*protos.ValidationResponse, error) {
-	return &protos.ValidationResponse{Valid: true}, nil
-}
-
 func newServer(netw Network, ll log.Logger) *hubRPCServer {
 	s := &hubRPCServer{
 		netw:      netw,
