@@ -82,8 +82,34 @@ MessageTypesAllowed = [1, 2]
 # who are you tracking?
 FidsAllowed = [10626]
 ```
+## Plugins
+## Handler API
+At some point, you'll want to make your own plug-ins. To get started, you should look at `handlers/handlers.go`! A plugin exports a Handler `struct` defining its own function to handle the message; here's an excerpt from the `struct`:
+```go
+type Handler struct {
+	Name string
+  // Used to make a connection to the DB. Go to handlers/handlers.go to see a method to pass down variables to the functions.
+	InitHandler               InitBehaviour
+  // Those functions will handle incoming messages! It's up to you to define those you need.
+	CastAddHandler            HandlerBehaviour
+	CastRemoveHandler         HandlerBehaviour
+	FrameActionHandler        HandlerBehaviour
+	ReactionAddHandler        HandlerBehaviour
+	ReactionRemoveHandler     HandlerBehaviour
+	LinkAddHandler            HandlerBehaviour
+	LinkRemoveHandler         HandlerBehaviour
+	VerificationAddHandler    HandlerBehaviour
+	VerificationRemoveHandler HandlerBehaviour
+}
 
-## Compiling plugins for Docker
+var PluginHandler = handler.Handler{
+  // .... amazing stuff here
+}
+
+// Then you compile & put it in compiled_handlers!
+```
+It's up to you to define & verify the paramaters that will be used in `config.toml`.
+### Compiling plugins for Docker
 You can edit the project's Dockerfile to add your plugin build command! 
 ```diff
 FROM golang:1.22
