@@ -36,10 +36,10 @@
 - [X] Create a tool to generate the `hub_identity` file so you can get persistence inside the container
 
 ## gRPC
-- [ ] `config.toml` to set options of the server
-- [ ] implement getCurrentPeers endpoint
-- [ ] TLS auth for getSecureSSLClient()
-- [ ] implement GetInfo gRPC method to tell other hubs we're synced
+- [X] `config.toml` to set options of the server
+- [ ] TLS auth for `getSecureSSLClient()`
+- [ ] implement `GetCurrentPeers`
+- [ ] implement `ValidateMessage`
 
 ## The project in itself
 - [ ] Branding & asserts for README.md
