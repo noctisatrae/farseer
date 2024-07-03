@@ -47,6 +47,6 @@
 - [X] Make pre-compiled binaries available in the release
 
 ## CI/CD & Automatic release
-- [ ] Write a `Makefile` to automatically build the binaries, compress them and release to GitHub
-- [ ] Create a Github job to build for different platforms (Mac/Windows)
+- [X] Write a `Makefile` to automatically build the binaries, compress them and release to GitHub
+- [X] Create a Github job to build for different platforms (Mac/Windows)
 - [ ] Write documentation so people can extend the jobs & `Makefile` to build customs plug-ins
