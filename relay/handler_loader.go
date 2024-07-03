@@ -27,7 +27,7 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 
 	for _, el := range utils.IntersectionOfArrays(keys, availableHandlers) {
 		ll.Debug("Loading handlers! |", "Element", el)
-		// todo: am I really reloading the plugins for every message ?
+		// am I really reloading the plugins for every message ?
 		// i don't think so: we're not passing individual messages rather the channel
 		err = LoadHandler(el, messages, ll, conf)
 		if err != nil {
