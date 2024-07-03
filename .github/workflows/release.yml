@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        arch: [amd64, arm64]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20' # Set to your required Go version
+
+    - name: Compile gen_hubid
+      run: |
+        cd identity
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}
+        cd ..
+
+    - name: Compile relay
+      run: |
+        cd relay
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}
+        cd ..
+
+    - name: Compile postgresql plugin
+      run: |
+        cd postgresql
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}.so
+        cd ..
+
+    - name: Create release package
+      if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
+      run: |
+        mkdir -p release/compiled_handlers
+        mv compiled_handlers/* release/compiled_handlers/
+        tar -czvf release.tar.gz -C release compiled_handlers
+
+    - name: Upload Release Asset
+      if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
+      uses: actions/upload-release-asset@v3
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: release.tar.gz
+        asset_name: release.tar.gz
+        asset_content_type: application/gzip
