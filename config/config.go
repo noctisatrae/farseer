@@ -8,6 +8,7 @@ import (
 type HubParams struct {
 	PublicHubIp     string
 	GossipPort      uint
+	RpcPort         uint
 	BootstrapPeers  []string
 	Debug           bool
 	BufferSize      uint
@@ -27,6 +28,7 @@ func Load(path string) (Config, error) {
 		return Config{
 			Hub: HubParams{
 				GossipPort:      2282,
+				RpcPort: 				 2283,
 				BootstrapPeers:  []string{"/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn"},
 				Debug:           true,
 				BufferSize:      128,
