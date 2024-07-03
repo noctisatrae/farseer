@@ -37,7 +37,7 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd identity
-        go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile relay
@@ -46,7 +46,7 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd relay
-        go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile postgresql plugin
@@ -60,16 +60,14 @@ jobs:
         cd ..
 
     - name: Create release package
-      if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
       run: |
         mkdir -p release/compiled_handlers
         mv compiled_handlers/* release/compiled_handlers/
-        tar -czvf release.tar.gz -C release compiled_handlers
+        tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release compiled_handlers
 
     - name: Upload Release Asset
-      if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
       uses: softprops/action-gh-release@v1
       with:
-        files: release.tar.gz
+        files: release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
