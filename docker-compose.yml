@@ -1,6 +1,6 @@
 services:
   farseer:
-    image: farseer
+    image: noctisatrae/farseer:latest
     restart: always
     ports:
       - 2282
