@@ -11,7 +11,7 @@ permissions:
 jobs:
   build-and-release:
     name: Build and Release
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
@@ -30,19 +30,19 @@ jobs:
     - name: Compile gen_hubid
       run: |
         cd identity
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile relay
       run: |
         cd relay
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile postgresql plugin
       run: |
         cd postgresql
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }} go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && echo 'darwin' || echo 'linux' }}_${{ matrix.arch }}.so
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
         cd ..
 
     - name: Create release package
