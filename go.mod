@@ -1,4 +1,4 @@
-module farseer
+module github.com/noctisatrae/farseer
 
 go 1.22.3
 
