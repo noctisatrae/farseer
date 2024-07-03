@@ -42,7 +42,7 @@ func TestHandlersFromConf(t *testing.T) {
 
 	keyArr := conf.GetHandlers()
 
-	assert.Equal(t, []string{}, keyArr)
+	assert.Equal(t, []string{"postgresql"}, keyArr)
 }
 
 // Verify if a handler is loaded if 1. it is enabled 2. it is compiled

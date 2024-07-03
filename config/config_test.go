@@ -29,7 +29,7 @@ func TestLoadConfig(t *testing.T) {
 	}, conf.Hub)
 
 	// dynamic conf
-	assert.Equal(t, false, postgreConf.(map[string]interface{})["Enabled"])
+	assert.Equal(t, true, postgreConf.(map[string]interface{})["Enabled"])
 }
 
 // can we get the params from a handler's configuration?
