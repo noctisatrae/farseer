@@ -89,7 +89,6 @@ func Start(wg *sync.WaitGroup, stopCh <-chan struct{}, netw Network) {
 		ll.Error("Couln't open config.toml, using default ports! |", "Err", err)
 	}
 
-	// todo: read from config
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", conf.Hub.RpcPort))
 	if err != nil {
 		ll.Fatal("Can't start the listnener! |", "Err", err)
