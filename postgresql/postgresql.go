@@ -237,7 +237,6 @@ func CastAddHandler(data *protos.MessageData, hash []byte, params map[string]int
 		data.Timestamp,
 
 		hashStr,
-		// todo: nil check
 		utils.BytesToHex(parentHash),
 		parentFid,
 		parentUrl,
@@ -302,7 +301,6 @@ func LinkRemoveHandler(data *protos.MessageData, hash []byte, params map[string]
 	LinkRemoveBody := data.GetLinkBody()
 	LinkHash := utils.BytesToHex(hash)
 
-	// TODO: Link check before remove query
 	cmdTag, err := conn.Exec(hdlCtx, LinkRemove, LinkRemoveBody.GetTargetFid())
 	if err != nil {
 		return err
