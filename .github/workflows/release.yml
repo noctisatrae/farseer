@@ -5,7 +5,6 @@ on:
     types: [created]
   workflow_dispatch:
 
-
 permissions:
   contents: write
   packages: write
@@ -22,6 +21,7 @@ jobs:
         include:
           - os: macos-latest
             arch: arm64
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -32,21 +32,31 @@ jobs:
         go-version: '1.22.3'
 
     - name: Compile gen_hubid
+      env:
+        GOARCH: ${{ matrix.arch }}
+        GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd identity
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../compiled_handlers/gen_hubid_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile relay
+      env:
+        GOARCH: ${{ matrix.arch }}
+        GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd relay
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
+        go build -o ../compiled_handlers/relay_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}
         cd ..
 
     - name: Compile postgresql plugin
+      env:
+        CGO_ENABLED: 1
+        GOARCH: ${{ matrix.arch }}
+        GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd postgresql
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
+        go build -buildmode=plugin -o ../compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
         cd ..
 
     - name: Create release package
