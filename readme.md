@@ -19,7 +19,8 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 ### Easy mode (Docker)
 [Compiling the plugins for Docker](#compiling-plugins-for-docker)
 1. Generate a `hub_identity` using the latest utility found in the [release section](https://github.com/noctisatrae/farseer/releases) or run the code in the `identity` folder. **Don't forget to put in the root of the repository!**
-2. Run this command to start the containers!
+2. Change your public IP address in the `config.toml` file so other peers can connect to you!
+3. Run this command to start the containers!
 ```sh
 docker-compose up -d
 ```
