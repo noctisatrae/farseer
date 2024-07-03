@@ -59,6 +59,9 @@ jobs:
         go build -buildmode=plugin -o ../release/compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
         cd ..
 
+    - name: Copy config.toml
+      run: cp config.toml release/
+
     - name: Create release package
       run: |
         tar -czvf release_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.tar.gz -C release .
