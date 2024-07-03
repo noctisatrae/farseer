@@ -4,6 +4,7 @@ services:
     restart: always
     ports:
       - 2282
+      - 2283
     dns:
       - 1.1.1.1
       - 1.0.0.1
