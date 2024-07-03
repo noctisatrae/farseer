@@ -1,4 +1,13 @@
 *.md
 LICENSE
 hub_identity
-compiled_handlers/
+relay/relay
+*/*.so
+hub_identity
+backups/
+hubs_saved.txt
+rpc.pb.go
+ts_testing/
+node_modules/
+bun.lockb
+.env
