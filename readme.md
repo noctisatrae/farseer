@@ -96,7 +96,7 @@ RUN go mod download && go mod verify
 
 # 1. Make sure your plugin is included into the image
 COPY . .
-+ # RUN go build -buildmode=plugin -o ./compiled_handlers/[plugin name].so [your source code for the plugin] 
++ RUN go build -buildmode=plugin -o ./compiled_handlers/[plugin name].so [your source code for the plugin] 
 # 2. Example for the postgresql plugin
 RUN go build -buildmode=plugin -o ./compiled_handlers/postgresql.so postgresql/postgresql.go
 # Then, build the hub itself
