@@ -54,9 +54,8 @@ jobs:
 
     - name: Upload Release Asset
       if: matrix.os == 'ubuntu-latest' && matrix.arch == 'amd64'
-      uses: actions/upload-release-asset@v3
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: release.tar.gz
-        asset_name: release.tar.gz
-        asset_content_type: application/gzip
+        files: release.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
