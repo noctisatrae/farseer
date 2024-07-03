@@ -11,3 +11,4 @@ node_modules/
 bun.lockb
 .env
 gen_hubid
+.github
