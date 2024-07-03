@@ -23,7 +23,6 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HubServiceClient interface {
 	SubmitMessage(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
-	ValidateMessage(ctx context.Context, in *Message, opts ...grpc.CallOption) (*ValidationResponse, error)
 }
 
 type hubServiceClient struct {
@@ -43,21 +42,11 @@ func (c *hubServiceClient) SubmitMessage(ctx context.Context, in *Message, opts 
 	return out, nil
 }
 
-func (c *hubServiceClient) ValidateMessage(ctx context.Context, in *Message, opts ...grpc.CallOption) (*ValidationResponse, error) {
-	out := new(ValidationResponse)
-	err := c.cc.Invoke(ctx, "/HubService/ValidateMessage", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // HubServiceServer is the server API for HubService service.
 // All implementations must embed UnimplementedHubServiceServer
 // for forward compatibility
 type HubServiceServer interface {
 	SubmitMessage(context.Context, *Message) (*Message, error)
-	ValidateMessage(context.Context, *Message) (*ValidationResponse, error)
 	mustEmbedUnimplementedHubServiceServer()
 }
 
@@ -67,9 +56,6 @@ type UnimplementedHubServiceServer struct {
 
 func (UnimplementedHubServiceServer) SubmitMessage(context.Context, *Message) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubmitMessage not implemented")
-}
-func (UnimplementedHubServiceServer) ValidateMessage(context.Context, *Message) (*ValidationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidateMessage not implemented")
 }
 func (UnimplementedHubServiceServer) mustEmbedUnimplementedHubServiceServer() {}
 
@@ -102,24 +88,6 @@ func _HubService_SubmitMessage_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _HubService_ValidateMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(HubServiceServer).ValidateMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/HubService/ValidateMessage",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(HubServiceServer).ValidateMessage(ctx, req.(*Message))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // HubService_ServiceDesc is the grpc.ServiceDesc for HubService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,10 +98,6 @@ var HubService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SubmitMessage",
 			Handler:    _HubService_SubmitMessage_Handler,
-		},
-		{
-			MethodName: "ValidateMessage",
-			Handler:    _HubService_ValidateMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
