@@ -1,5 +1,7 @@
 # farseer - another kind of Farcaster hub
-farseer is a lightweight re-implementation of a Farcaster hub that's extensible through plugins (custom message handlers). In short, you can bring your own DB, logic & infrastructure and harvest data from the protocol.
+farseer is a lightweight re-implementation of a Farcaster hub that **does not require syncing to operate** & is extendable through plugins. In short, you can bring your own DB, logic & infrastructure and harvest data from the protocol while fostering decentralization! If you like this project, **consider giving a star to the repository**: it's a real help for motivation! Looking for PRs, issues & feedback, so feel free to write something and send it to me! 
+
+See the [todos](./todos.md) to see what's left to do :)
 
 ## How to get started?
 ### General architecture
@@ -11,14 +13,15 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 ├── config.toml <== configure the behaviour of the hubs & the plugin
 ├── docker-compose.yml <== infrastructure example
 ├── Dockerfile <== automatization of the process
-├── hub_identity <== SECRET private key of the hub
-├── relay.binary <== what you'll run
+├── hub_identity <== SECRET private key of the hub (needs to be generated for docker-compose)
+├── relay <== what you'll run (binary)
 ```
 ### Easy mode (Docker)
 [Compiling the plugins for Docker](#compiling-plugins-for-docker)
-1. Go into the root of the directory & start the container stack:
+1. Generate a `hub_identity` using the latest utility found in the [release section](https://github.com/noctisatrae/farseer/releases) or run the code in the `identity` folder. **Don't forget to put in the root of the repository!**
+2. Run this command to start the containers!
 ```sh
-docker build -t farseer && docker-compose up -d
+docker-compose up -d
 ```
 This will start the hub with the default behavior & plug-ins.
 
