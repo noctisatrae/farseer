@@ -8,7 +8,7 @@ BootstrapPeers = [
   # "/dns/keats.farcaster.xyz/tcp/2282/p2p/12D3KooWBPXFPS656B76tCmbbX6PB4vunmQcd8F38MZjkR88ofBx",
   # "/dns/hoyt.farcaster.xyz/tcp/2282/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
 ]
-Debug = true
+Debug = false
 BufferSize = 128
 ContactInterval = 3000
 
