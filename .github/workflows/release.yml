@@ -56,7 +56,7 @@ jobs:
         GOOS: ${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}
       run: |
         cd postgresql
-        go build -buildmode=plugin -o ../release/compiled_handlers/postgresql_${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }}_${{ matrix.arch }}.so
+        go build -buildmode=plugin -o ../release/compiled_handlers/postgresql.so
         cd ..
 
     - name: Copy config.toml
