@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/charmbracelet/log"
 	"github.com/noctisatrae/farseer/config"
 	protos "github.com/noctisatrae/farseer/protos"
 	FcTime "github.com/noctisatrae/farseer/time"
-	"github.com/charmbracelet/log"
 	"github.com/stretchr/testify/assert"
 )
 
