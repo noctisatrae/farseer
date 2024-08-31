@@ -30,6 +30,8 @@ import (
 	"github.com/multiformats/go-multiaddr-dns"
 )
 
+const HUB_VERSION = "2024.7.24"
+
 type ResolveResult struct {
 	ResolvedMultiaddrs []multiaddr.Multiaddr
 	Error              error
@@ -210,7 +212,7 @@ func main() {
 		for {
 			<-ticker.C
 			netwContact.PublishContactInfo(&protos.ContactInfoContent{
-				HubVersion: "2024.7.24",
+				HubVersion: HUB_VERSION,
 				Network:    2,
 				GossipAddress: &protos.GossipAddressInfo{
 					Family:  4, // to know if address ip4/ip6?
@@ -223,7 +225,7 @@ func main() {
 						Address: conf.Hub.PublicHubIp,
 						Port:    uint32(conf.Hub.GossipPort),
 					},
-					HubVersion: "2024.6.12",
+					HubVersion: HUB_VERSION,
 					Network:    2,
 					Timestamp:  uint64(time.Now().Unix()),
 					AppVersion: "1.0",
