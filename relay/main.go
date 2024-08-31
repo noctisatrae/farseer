@@ -228,7 +228,7 @@ func main() {
 					HubVersion: HUB_VERSION,
 					Network:    1,
 					Timestamp:  uint64(time.Now().Unix()),
-					AppVersion: "1.0",
+					AppVersion: "1.9.2",
 				},
 				Timestamp: uint64(time.Now().Unix()),
 			})
