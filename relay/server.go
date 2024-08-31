@@ -7,8 +7,8 @@ import (
 	"os"
 	"sync"
 
-	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/noctisatrae/farseer/config"
+	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/noctisatrae/farseer/time"
 	"github.com/noctisatrae/farseer/utils"
 
@@ -36,8 +36,8 @@ func (s *hubRPCServer) SubmitMessage(ctx context.Context, message *protos.Messag
 	if err != nil {
 		log.Error("Couldn't convert FC time to unix time |", "Error", err)
 	}
-	log.Debug("Received a message from gRPC! |", 
-		"Text", message.Data.GetCastAddBody().Text, 
+	log.Debug("Received a message from gRPC! |",
+		"Text", message.Data.GetCastAddBody().Text,
 		"Hash", utils.BytesToHex(message.Hash),
 		"Signer", utils.BytesToHex(message.Signer),
 		"Signature", utils.BytesToHex(message.Signature),
