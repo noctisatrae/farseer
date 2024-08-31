@@ -9,3 +9,4 @@ bun.lockb
 .env
 gen_hubid
 app
+*.diff
