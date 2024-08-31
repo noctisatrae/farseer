@@ -36,6 +36,7 @@ type Handler struct {
 }
 
 func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll log.Logger, params map[string]interface{}) {
+	ll.Debug("is called with params |", "params", params)
 	if handler.InitHandler == nil {
 	} else {
 		err := handler.InitHandler(params)
@@ -45,6 +46,7 @@ func (handler Handler) HandleMessages(messages chan *protos.GossipMessage, ll lo
 	}
 	for msgB := range messages { // i hope that the chan only gives one message at a time so it's just O(n) and not O(n²)
 		for _, m := range msgB.GetMessageBundle().GetMessages() {
+			ll.Debug("Received msg?")
 			data := m.Data
 			hash := m.Hash
 			switch data.Type {
