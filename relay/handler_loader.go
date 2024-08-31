@@ -25,15 +25,24 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 
 	ll.Debug("Available handlers! |", "Handlers", availableHandlers)
 
-	for _, el := range utils.IntersectionOfArrays(keys, availableHandlers) {
-		ll.Debug("Loading handlers! |", "Element", el)
-		// am I really reloading the plugins for every message ?
-		// i don't think so: we're not passing individual messages rather the channel
-		err = LoadHandler(el, messages, ll, conf)
-		if err != nil {
-			ll.Error("Couldn't load handlers from conf! |", "Error", err)
-			return err
+	if (len(utils.IntersectionOfArrays(keys, availableHandlers)) == 0) {
+		var h handlers.Handler;
+		h.InitHandler = func(params map[string]interface{}) error {
+			ll.Debug("Init without plugins")
+			return nil;
 		}
+		go h.HandleMessages(messages, ll, nil)
+	} else {
+		for _, el := range utils.IntersectionOfArrays(keys, availableHandlers) {
+			ll.Debug("Loading handlers! |", "Element", el)
+			// am I really reloading the plugins for every message ?
+			// i don't think so: we're not passing individual messages rather the channel
+			err = LoadHandler(el, messages, ll, conf)
+			if err != nil {
+				ll.Error("Couldn't load handlers from conf! |", "Error", err)
+				return err
+			}
+		}	
 	}
 
 	return nil
