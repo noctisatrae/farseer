@@ -6,9 +6,9 @@ import (
 	"plugin"
 	"strings"
 
-	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/noctisatrae/farseer/config"
 	"github.com/noctisatrae/farseer/handlers"
+	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/noctisatrae/farseer/utils"
 
 	"github.com/charmbracelet/log"
@@ -25,11 +25,11 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 
 	ll.Debug("Available handlers! |", "Handlers", availableHandlers)
 
-	if (len(utils.IntersectionOfArrays(keys, availableHandlers)) == 0) {
-		var h handlers.Handler;
+	if len(utils.IntersectionOfArrays(keys, availableHandlers)) == 0 {
+		var h handlers.Handler
 		h.InitHandler = func(params map[string]interface{}) error {
 			ll.Debug("Init without plugins")
-			return nil;
+			return nil
 		}
 		go h.HandleMessages(messages, ll, nil)
 	} else {
@@ -42,7 +42,7 @@ func LoadHandlersFromConf(conf config.Config, messages chan *protos.GossipMessag
 				ll.Error("Couldn't load handlers from conf! |", "Error", err)
 				return err
 			}
-		}	
+		}
 	}
 
 	return nil
