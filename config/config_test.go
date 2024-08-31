@@ -19,10 +19,10 @@ func TestLoadConfig(t *testing.T) {
 
 	// always-the-same option test
 	assert.Equal(t, config.HubParams{
-		PublicHubIp: "92.158.95.48",
-		GossipPort:  2282,
-		RpcPort: 2283,
-		BootstrapPeers: []string{},
+		PublicHubIp:     "92.158.95.48",
+		GossipPort:      2282,
+		RpcPort:         2283,
+		BootstrapPeers:  []string{},
 		Debug:           false,
 		BufferSize:      128,
 		ContactInterval: 3000,
