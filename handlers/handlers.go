@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	protos "github.com/noctisatrae/farseer/protos"
 	"github.com/charmbracelet/log"
+	protos "github.com/noctisatrae/farseer/protos"
 )
 
 type InitBehaviour func(params map[string]interface{}) error
+
 // This is the definition of the type of function that will handle incoming messages.
 type HandlerBehaviour func(data *protos.MessageData, hash []byte, params map[string]interface{}) error
 
