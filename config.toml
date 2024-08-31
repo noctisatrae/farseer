@@ -3,10 +3,9 @@ PublicHubIp = "92.158.95.48"
 GossipPort = 2282
 RpcPort = 2283
 BootstrapPeers = [
-  # "/dns/lamia.farcaster.xyz/tcp/2282/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV",
-  # "/dns/nemes.farcaster.xyz/tcp/2282/p2p/12D3KooWMQrf6unpGJfLBmTGy3eKTo4cGcXktWRbgMnfbZLXqBbn",
-  # "/dns/keats.farcaster.xyz/tcp/2282/p2p/12D3KooWBPXFPS656B76tCmbbX6PB4vunmQcd8F38MZjkR88ofBx",
-  # "/dns/hoyt.farcaster.xyz/tcp/2282/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
+  "/dns/hoyt.farcaster.xyz/tcp/2282/p2p/12D3KooWRnSZUxjVJjbSHhVKpXtvibMarSfLSKDBeMpfVaNm1Joo",
+  "/dns/lamia.farcaster.xyz/tcp/2282/p2p/12D3KooWJECuSHn5edaorpufE9ceAoqR5zcAuD4ThoyDzVaz77GV",
+  "/dns/bootstrap.neynar.com/tcp/2282/p2p/12D3KooWNsC2vzuHdKDfSM6xnMZwMjWK8zZCYHyLXuhRMeVRebGK",
 ]
 Debug = false
 BufferSize = 128
