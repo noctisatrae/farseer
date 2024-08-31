@@ -5,11 +5,14 @@ import (
 	protos "github.com/noctisatrae/farseer/protos"
 )
 
+// This is the function that is run on module load. It can be used to set up any contextual variable like DB connections.
 type InitBehaviour func(params map[string]interface{}) error
 
 // This is the definition of the type of function that will handle incoming messages.
 type HandlerBehaviour func(data *protos.MessageData, hash []byte, params map[string]interface{}) error
 
+// The Handler struct is used to hold the reference to all your custom functions. Please refer to the protobufs to see all the messages availabe.
+// Note: not all message types are yet implemented!
 type Handler struct {
 	// The name of the plugin/custom handler - used for contextualization in logs.
 	Name string
