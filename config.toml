@@ -12,7 +12,7 @@ BufferSize = 128
 ContactInterval = 3000
 
 [handlers.postgresql]
-Enabled = false
+Enabled = true
 DbAddress = "postgres://postgres:example@db:5432/postgres"
 # refer to the enum l.60 in message.proto for the integer of msg types | here we only want to save the casts
 FidsAllowed = [10626]
