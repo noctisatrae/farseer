@@ -123,7 +123,8 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[1], h.ID().String()))
+	log.Debug("Available addresses! |", "Addrs", h.Addrs())
+	log.Info("Started the libp2p host! |", "Addr", fmt.Sprintf("%s/p2p/%s", h.Addrs()[0], h.ID().String()))
 
 	resultsChan := make(chan ResolveResult)
 
@@ -200,7 +201,7 @@ func main() {
 	go Start(&wg, stopCh, *netwPrimary)
 
 	// HANDLE THE MESSAGES
-	LoadHandlersFromConf(conf, netwPrimary.NetworkMessage, netwPrimary.logger)
+	go logMessages(netwPrimary.NetworkMessage, netwPrimary.logger)
 	go HandleContactInfo(netwContact.NetworkMessage, netwContact.logger, h, ctx)
 	go logMessages(netwDiscovery.NetworkMessage, netwDiscovery.logger)
 
