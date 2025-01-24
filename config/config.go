@@ -16,8 +16,7 @@ type HubParams struct {
 }
 
 type Config struct {
-	Hub      HubParams
-	Handlers map[string]interface{} `toml:"handlers"`
+	Hub HubParams
 }
 
 func Load(path string) (Config, error) {
@@ -51,32 +50,4 @@ func Load(path string) (Config, error) {
 	}
 
 	return config, nil
-}
-
-func (conf Config) GetHandlers() []string {
-	keys := []string{}
-	for k := range conf.Handlers {
-		isKEnabled := conf.Handlers[k].(map[string]interface{})["Enabled"]
-		if isKEnabled == true {
-			keys = append(keys, k)
-		} else if isKEnabled == nil {
-			return keys
-		}
-	}
-	return keys
-}
-
-func (conf Config) GetParams(handler string) map[string]interface{} {
-	handlerConfig, ok := conf.Handlers[handler]
-	if !ok {
-		return map[string]interface{}{}
-	}
-
-	params := map[string]interface{}{}
-	for key, value := range handlerConfig.(map[string]interface{}) {
-		if key != "Enabled" {
-			params[key] = value
-		}
-	}
-	return params
 }

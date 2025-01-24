@@ -1,15 +1,13 @@
 # farseer - another kind of Farcaster hub
-farseer is a lightweight re-implementation of a Farcaster hub that **does not require syncing to operate** & is extendable through plugins. In short, you can bring your own DB, logic & infrastructure and harvest data from the protocol while fostering decentralization! If you like this project, **consider giving a star to the repository**: it's a real help for motivation! Looking for PRs, issues & feedback, so feel free to write something and send it to me! 
+farseer is a lightweight re-implementation of a Farcaster hub that **does not require syncing to operate**. In short, you can bring your own DB, logic & infrastructure and harvest data from the protocol while fostering decentralization! If you like this project, **consider giving a star to the repository**: it's a real help for motivation! Looking for PRs, issues & feedback, so feel free to write something and send it to me! 
 
 See the [todos](./todos.md) to see what's left to do :)
 
 ## How to get started?
 ### General architecture
-There are four components to farseer: a config file (`config.toml`), plugins, the identity file & the hub itself. Here's a quick rundown of how it works:
+There are three components to farseer: a config file (`config.toml`), the identity file & the hub itself. Here's a quick rundown of how it works:
 ```
 .
-├── compiled_handlers <== where you'll put your compiled plugins
-│   └── postgresql.so 
 ├── config.toml <== configure the behaviour of the hubs & the plugin
 ├── docker-compose.yml <== infrastructure example
 ├── Dockerfile <== automatization of the process
@@ -17,7 +15,6 @@ There are four components to farseer: a config file (`config.toml`), plugins, th
 ├── relay <== what you'll run (binary)
 ```
 ### Easy mode (Docker)
-[Compiling the plugins for Docker](#compiling-plugins-for-docker)
 1. Generate a `hub_identity` using the latest utility found in the [release section](https://github.com/noctisatrae/farseer/releases) or run the code in the `identity` folder. **Don't forget to put in the root of the repository!**
 2. Change your public IP address in the `config.toml` file so other peers can connect to you!
 3. Run this command to start the containers!
@@ -37,13 +34,7 @@ git clone https://github.com/noctisatrae/farseer.git
 go build -v -o app ./relay
 ```
 
-3. Compile your plugins/custom handlers using the *plugin mode* of `go build` (here we'll compile the example `postgresql` plugin):
-```sh
-go build -buildmode=plugin -o ./compiled_handlers/postgresql.so postgresql/postgresql.go
-```
-There's a lot going here but essentially, we tell Go to build a plugin from the postgresql.go file output it in the `compiled_handlers` folder that will be read by the hub to exectute the custom logic.
-
-4. Now, you'll start the hub by running: 
+2. Now, you'll start the hub by running: 
 ```sh
 ./app
 ```
@@ -70,67 +61,4 @@ Debug = false
 # Not sure of the usefulness of this, it's something I have yet to experiment with
 BufferSize = 128
 ContactInterval = 30
-
-# The interesting part!
-# To define the behavior of a plugin in `compiled_handlers`, you write:
-# [handlers.(pluginName)]
-[handlers.postgresql]
-# This is common to all plugins: do you want to enable it?
-Enabled = true
-# Below, the options are specific:
-# The options below are determined to by the developer of the plugin. They manage how the arguments are parsed and used!
-DbAddress = "postgres://postgres:example@db:5432/postgres"
-# refer to the enum l.60 in message.proto for the integer of msg types | here we only want to save the casts & deletions
-# delete a filter to not use it!
-MessageTypesAllowed = [1, 2]
-# who are you tracking?
-FidsAllowed = [10626]
-```
-## Plugins
-## Handler API
-At some point, you'll want to make your own plug-ins. To get started, you should look at `handlers/handlers.go`! A plugin exports a Handler `struct` defining its own function to handle the message; here's an excerpt from the `struct`:
-```go
-type Handler struct {
-	Name string
-  // Used to make a connection to the DB. Go to handlers/handlers.go to see a method to pass down variables to the functions.
-	InitHandler               InitBehaviour
-  // Those functions will handle incoming messages! It's up to you to define those you need.
-	CastAddHandler            HandlerBehaviour
-	CastRemoveHandler         HandlerBehaviour
-	FrameActionHandler        HandlerBehaviour
-	ReactionAddHandler        HandlerBehaviour
-	ReactionRemoveHandler     HandlerBehaviour
-	LinkAddHandler            HandlerBehaviour
-	LinkRemoveHandler         HandlerBehaviour
-	VerificationAddHandler    HandlerBehaviour
-	VerificationRemoveHandler HandlerBehaviour
-}
-
-var PluginHandler = handler.Handler{
-  // .... amazing stuff here
-}
-
-// Then you compile & put it in compiled_handlers!
-```
-It's up to you to define & verify the paramaters that will be used in `config.toml`.
-### Compiling plugins for Docker
-You can edit the project's Dockerfile to add your plugin build command! 
-```diff
-FROM golang:1.22
-
-WORKDIR /usr/src/app
-
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
-
-# 1. Make sure your plugin is included into the image
-COPY . .
-+ RUN go build -buildmode=plugin -o ./compiled_handlers/[plugin name].so [your source code for the plugin] 
-# 2. Example for the postgresql plugin
-RUN go build -buildmode=plugin -o ./compiled_handlers/postgresql.so postgresql/postgresql.go
-# Then, build the hub itself
-RUN go build -v -o /usr/local/bin/app ./relay
-
-CMD ["app"]
 ```
